@@ -1,0 +1,62 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Compilación
+dist/
+dist-ssr/
+build/
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase
+firebase-debug.log
+firestore-debug.log
+.firebase/
+functions/node_modules/
+functions/dist/
+
+# Scripts (ya lo tienes, pero lo mantengo por claridad)
+scripts/
+
+# Vite
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# Archivos temporales
+*.cache
+*.tmp
+*.bak
+
+# Sistema operativo
+Thumbs.db
+
+#Wompi
+.env
