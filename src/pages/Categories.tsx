@@ -41,15 +41,16 @@ const Categories: React.FC = () => {
   };
 
   return (
-    <div className="bg-body text-white p-6">
+    <div className="p-6">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-semibold mb-4">Categorías</h1>
+        <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Categorías</h1>
         <div className="mb-6 flex items-center">
-          <label className="mr-3 text-lg">Filtrar por categoría:</label>
+          <label className="mr-3 text-lg" style={{ color: 'var(--text-color)' }}>Filtrar por categoría:</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="p-2 rounded-md bg-menu text-white focus:outline-none focus:ring-2 focus:ring-button"
+            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-button"
+            style={{ color: 'var(--text-color)' }}
           >
             {categories.map((cat) => (
               <option key={cat} value={cat} className="text-black">
@@ -65,7 +66,7 @@ const Categories: React.FC = () => {
               .map((product) => (
                 <div
                   key={product.id}
-                  className="bg-menu p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
+                  className="p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
                 >
                   <img
                     src={product.image || "/placeholder.jpg"}
@@ -73,7 +74,7 @@ const Categories: React.FC = () => {
                     className="w-full h-48 object-cover rounded-md mb-3 cursor-pointer"
                     onClick={() => handleProductClick(product.id)}
                   />
-                  <h3 className="text-lg font-medium">{product.name}</h3>
+                  <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
                   <p className="text-md text-button">${product.price}</p>
                   <button
                     onClick={() => addToCart(product)}
@@ -85,7 +86,7 @@ const Categories: React.FC = () => {
               ))}
           </div>
         ) : (
-          <p>No hay productos disponibles.</p>
+          <p style={{ color: 'var(--text-color)' }}>No hay productos disponibles.</p>
         )}
       </div>
     </div>

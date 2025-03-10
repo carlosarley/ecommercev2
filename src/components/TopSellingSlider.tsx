@@ -65,21 +65,21 @@ const TopSellingSlider: React.FC = () => {
   };
 
   return (
-    <div className="bg-body text-white p-6">
+    <div className="p-6">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-semibold mb-4">Más Vendidos</h2>
+        <h2 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Más Vendidos</h2>
         {topSelling.length > 0 ? (
           <Slider {...settings}>
             {topSelling.map((product) => (
               <div key={product.id} className="p-4">
-                <div className="bg-menu p-4 rounded-lg text-center border border-gray-700 hover:shadow-lg transition-shadow">
+                <div className="p-4 rounded-lg text-center border border-gray-700 hover:shadow-lg transition-shadow">
                   <img
                     src={product.image || "/placeholder.jpg"}
                     alt={product.name}
                     className="w-full h-40 object-cover rounded-md mb-2 cursor-pointer"
                     onClick={() => handleProductClick(product.id)}
                   />
-                  <p className="text-lg font-medium">{product.name}</p>
+                  <p className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</p>
                   <p className="text-md text-button">${product.price}</p>
                   <button
                     onClick={() => addToCart(product)}
@@ -92,7 +92,7 @@ const TopSellingSlider: React.FC = () => {
             ))}
           </Slider>
         ) : (
-          <p className="text-center">No hay productos más vendidos.</p>
+          <p className="text-center" style={{ color: 'var(--text-color)' }}>No hay productos más vendidos.</p>
         )}
       </div>
     </div>

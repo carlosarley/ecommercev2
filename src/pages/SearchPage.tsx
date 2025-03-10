@@ -36,18 +36,18 @@ const SearchPage: React.FC = () => {
     return () => unsubscribe();
   }, [q, navigate]);
 
-  if (loading) return <div className="container mx-auto p-6 text-white">Cargando...</div>;
-  if (!q) return <div className="container mx-auto p-6 text-white">No se proporcionó término de búsqueda</div>;
+  if (loading) return <div className="container mx-auto p-6" style={{ color: 'var(--text-color)' }}>Cargando...</div>;
+  if (!q) return <div className="container mx-auto p-6" style={{ color: 'var(--text-color)' }}>No se proporcionó término de búsqueda</div>;
 
   return (
-    <div className="container mx-auto p-6 bg-body text-white">
-      <h1 className="text-3xl font-semibold mb-4">Resultados de búsqueda para: {q}</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Resultados de búsqueda para: {q}</h1>
       {products.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products.map((product) => (
             <div key={product.id} className="bg-menu p-4 rounded-lg border border-gray-700">
               <img src={product.image || "/placeholder.jpg"} alt={product.name} className="w-full h-40 object-cover rounded-md mb-2" />
-              <h3 className="text-lg font-medium">{product.name}</h3>
+              <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
               <p className="text-md text-button">${product.price}</p>
               <button
                 onClick={() => navigate(`/product/${product.id}`)}
@@ -59,7 +59,7 @@ const SearchPage: React.FC = () => {
           ))}
         </div>
       ) : (
-        <p>No se encontraron productos para "{q}".</p>
+        <p style={{ color: 'var(--text-color)' }}>No se encontraron productos para "{q}".</p>
       )}
     </div>
   );

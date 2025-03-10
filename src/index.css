@@ -2,41 +2,76 @@
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #000; /* Fondo del body */
-  color: #fff; /* Texto por defecto */
+:root {
+  /* Modo oscuro (por defecto) */
+  --background-color: #000; /* Fondo general */
+  --text-color: #ffffff; /* Texto blanco en modo oscuro */
+  --menu-bg: #151515; /* Fondo del menú (fijo) */
+  --toast-bg: #1a1a1a; /* Fondo de los toasts */
+  --toast-border: #f90; /* Borde de los toasts */
+  --toast-text: #fff; /* Texto de los toasts */
+  --button-bg: #f90; /* Fondo de botones (fijo) */
+  --button-text: #fff; /* Texto de botones (fijo) */
+  --button-bg-hover: #e68a00; /* Fondo de botones en hover (fijo) */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Modo claro */
+[data-theme="light"] {
+  --background-color: #e3e6e6; /* Fondo claro */
+  --text-color: #000000; /* Texto oscuro en modo claro */
+  --menu-bg: #151515; /* Fondo del menú (fijo, no cambia) */
+  --toast-bg: #ffffff; /* Fondo de los toasts */
+  --toast-border: #f90; /* Borde de los toasts */
+  --toast-text: #000; /* Texto de los toasts */
+  --button-bg: #f90; /* Fondo de botones (fijo) */
+  --button-text: #fff; /* Texto de botones (fijo) */
+  --button-bg-hover: #e68a00; /* Fondo de botones en hover (fijo) */
 }
+
+/* Aplicar las variables a los elementos */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color); /* Texto del body cambia según el tema */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 button {
   cursor: pointer;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .bg-menu {
-  background-color: #151515 !important;
+  background-color: var(--menu-bg) !important; /* Asegura que el menú use #151515 */
 }
-/* Agrega esto al final del archivo */
+
+/* Estilos para header fijo */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  width: 100%;
+}
+
+/* Estilos de Toastify */
 .Toastify__toast {
-  background: #1a1a1a !important; /* Fondo oscuro para mantener el tema */
-  color: #fff !important;
+  background: var(--toast-bg) !important;
+  color: var(--toast-text) !important;
 }
 
 .Toastify__toast--success {
-  border-left: 4px solid #f90 !important; /* Línea izquierda de color #f90 */
+  border-left: 4px solid var(--toast-border) !important;
 }
 
 .Toastify__progress-bar {
-  background: #f90 !important; /* Barra de progreso de color #f90 */
+  background: var(--toast-border) !important;
 }
 
 .Toastify__close-button {
-  color: #fff !important;
+  color: var(--toast-text) !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

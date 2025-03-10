@@ -23,7 +23,7 @@ const AdminPanel: React.FC = () => {
 
   useEffect(() => {
     if (!currentUser || currentUser.email !== "admin@example.com") {
-      navigate("/"); // Redirigir si no es administrador
+      navigate("/");
       return;
     }
 
@@ -79,93 +79,102 @@ const AdminPanel: React.FC = () => {
   }
 
   return (
-    <div className="bg-body text-white p-6">
+    <div className="p-6">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-semibold mb-4">Panel Administrativo</h1>
+        <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Panel Administrativo</h1>
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Añadir Producto</h2>
+          <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Añadir Producto</h2>
           <form onSubmit={handleAddProduct} className="space-y-4">
             <div>
-              <label className="block mb-1">Nombre</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Nombre</label>
               <input
                 type="text"
                 value={newProduct.name}
                 onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
                 required
               />
             </div>
             <div>
-              <label className="block mb-1">Precio</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Precio</label>
               <input
                 type="number"
                 value={newProduct.price}
                 onChange={(e) => setNewProduct({ ...newProduct, price: Number(e.target.value) })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
                 required
               />
             </div>
             <div>
-              <label className="block mb-1">Imagen (URL)</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Imagen (URL)</label>
               <input
                 type="text"
                 value={newProduct.image}
                 onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <div>
-              <label className="block mb-1">Categoría</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Categoría</label>
               <input
                 type="text"
                 value={newProduct.category}
                 onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <div>
-              <label className="block mb-1">Descripción</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Descripción</label>
               <textarea
                 value={newProduct.description}
                 onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
                 rows={4}
               />
             </div>
             <div>
-              <label className="block mb-1">Descuento (%)</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Descuento (%)</label>
               <input
                 type="number"
                 value={newProduct.discount}
                 onChange={(e) => setNewProduct({ ...newProduct, discount: Number(e.target.value) })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <div>
-              <label className="block mb-1">Ventas</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Ventas</label>
               <input
                 type="number"
                 value={newProduct.sales}
                 onChange={(e) => setNewProduct({ ...newProduct, sales: Number(e.target.value) })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <div>
-              <label className="block mb-1">Stock</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Stock</label>
               <input
                 type="number"
                 value={newProduct.stock}
                 onChange={(e) => setNewProduct({ ...newProduct, stock: Number(e.target.value) })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <div>
-              <label className="block mb-1">Cupón</label>
+              <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Cupón</label>
               <input
                 type="text"
                 value={newProduct.coupon}
                 onChange={(e) => setNewProduct({ ...newProduct, coupon: e.target.value })}
-                className="w-full p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                className="w-full p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90]"
+                style={{ color: 'var(--text-color)' }}
               />
             </div>
             <button
@@ -177,7 +186,7 @@ const AdminPanel: React.FC = () => {
           </form>
         </div>
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Gestionar Productos</h2>
+          <h2 className="text-2xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Gestionar Productos</h2>
           <div className="grid grid-cols-1 gap-6">
             {products.map((product) => (
               <div
@@ -190,15 +199,16 @@ const AdminPanel: React.FC = () => {
                   className="w-20 h-20 object-cover rounded-md mr-4"
                 />
                 <div className="flex-1">
-                  <h3 className="text-lg font-medium">{product.name}</h3>
+                  <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
                   <p className="text-md text-[#f90]">${product.price}</p>
-                  <p>Stock: {product.stock}</p>
+                  <p style={{ color: 'var(--text-color)' }}>Stock: {product.stock}</p>
                   <div className="flex items-center mt-2">
                     <input
                       type="number"
                       defaultValue={product.stock}
                       onBlur={(e) => handleUpdateStock(product.id, Number(e.target.value))}
-                      className="w-20 p-2 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-[#f90] mr-2"
+                      className="w-20 p-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-[#f90] mr-2"
+                      style={{ color: 'var(--text-color)' }}
                     />
                     <button
                       onClick={() => handleDeleteProduct(product.id)}

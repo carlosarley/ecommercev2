@@ -1,6 +1,6 @@
-import React from "react"; // Importar React explícitamente
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext"; // Usar el custom hook useCart
+import { useCart } from "../context/CartContext";
 
 const Cart: React.FC = () => {
   const { cartItems, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -10,16 +10,16 @@ const Cart: React.FC = () => {
 
   const handleProceedToPayment = () => {
     if (cartItems.length === 0) {
-      alert("El carrito está vacío. Agrega productos antes de pagar."); // O usa toast si prefieres
+      alert("El carrito está vacío. Agrega productos antes de pagar.");
       return;
     }
-    navigate("/payment", { state: { total: totalPrice, cartItems } }); // Pasar datos al PaymentPage
+    navigate("/payment", { state: { total: totalPrice, cartItems } });
   };
 
   return (
-    <div className="bg-body text-white p-6">
+    <div className="p-6">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-semibold mb-4">Carrito de Compras</h1>
+        <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Carrito de Compras</h1>
         {cartItems.length > 0 ? (
           <div>
             <div className="grid grid-cols-1 gap-6">
@@ -34,9 +34,9 @@ const Cart: React.FC = () => {
                     className="w-20 h-20 object-cover rounded-md mr-4"
                   />
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium">{item.name}</h3>
+                    <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{item.name}</h3>
                     <p className="text-md text-button">${item.price} x {item.quantity}</p>
-                    <p className="text-md">Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-md" style={{ color: 'var(--text-color)' }}>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -44,7 +44,7 @@ const Cart: React.FC = () => {
                       >
                         −
                       </button>
-                      <span className="mx-3">{item.quantity}</span>
+                      <span className="mx-3" style={{ color: 'var(--text-color)' }}>{item.quantity}</span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
                         className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
@@ -63,7 +63,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
             <div className="mt-6 text-right">
-              <p className="text-xl font-semibold">Total: ${totalPrice.toFixed(2)}</p>
+              <p className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: ${totalPrice.toFixed(2)}</p>
               <button
                 onClick={clearCart}
                 className="mt-4 bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 mr-4"
@@ -79,7 +79,7 @@ const Cart: React.FC = () => {
             </div>
           </div>
         ) : (
-          <p>Tu carrito está vacío.</p>
+          <p style={{ color: 'var(--text-color)' }}>Tu carrito está vacío.</p>
         )}
       </div>
     </div>

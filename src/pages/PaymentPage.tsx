@@ -4,7 +4,6 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 
-// Obtener variables de entorno
 const WOMPI_PUBLIC_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY;
 const WOMPI_PRIVATE_KEY = import.meta.env.VITE_WOMPI_PRIVATE_KEY;
 
@@ -35,17 +34,17 @@ const PaymentPage: React.FC = () => {
     const transactionData = {
       amount_in_cents: totalInCents,
       currency: "COP",
-      customer_email: "cliente@example.com", // Reemplaza con email del usuario si tienes autenticación
-      payment_method_type: "MULTIPLE", // Permite elegir entre PSE, tarjeta, etc.
+      customer_email: "cliente@example.com",
+      payment_method_type: "MULTIPLE",
       payment_method: {
-        installments: 1, // Número de cuotas (1 para pago único)
+        installments: 1,
       },
-      reference: `REF_${Date.now()}`, // Referencia única para la transacción
+      reference: `REF_${Date.now()}`,
       customer_data: {
-        full_name: "Cliente Ejemplo", // Personaliza con datos del usuario si los tienes
+        full_name: "Cliente Ejemplo",
         email: "cliente@example.com",
         phone_number: "1234567890",
-        legal_id: "123456789", // Documento del cliente
+        legal_id: "123456789",
         legal_id_type: "CC",
       },
     };
@@ -75,7 +74,6 @@ const PaymentPage: React.FC = () => {
     }
   };
 
-  // Efecto para cargar el widget después de obtener el transactionId
   useEffect(() => {
     if (transactionId) {
       const script = document.createElement("script");
@@ -84,8 +82,8 @@ const PaymentPage: React.FC = () => {
       script.onload = () => {
         if (window.Wompi) {
           window.Wompi.renderButton({
-            publicKey: WOMPI_PUBLIC_KEY, // Clave pública de prueba
-            reference: `REF_${transactionId}`, // Usa el transactionId como referencia
+            publicKey: WOMPI_PUBLIC_KEY,
+            reference: `REF_${transactionId}`,
             amountInCents: totalInCents,
             currency: "COP",
             onSuccess: (data: any) => {
@@ -99,7 +97,7 @@ const PaymentPage: React.FC = () => {
             },
             onClose: () => {
               console.log("Widget cerrado");
-              setTransactionId(null); // Resetear para nueva transacción
+              setTransactionId(null);
             },
           });
         } else {
@@ -116,10 +114,10 @@ const PaymentPage: React.FC = () => {
   }, [transactionId, totalInCents, navigate]);
 
   return (
-    <div className="container mx-auto p-6 bg-menu text-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Pago con Wompi</h1>
+    <div className="container mx-auto p-6 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--text-color)' }}>Pago con Wompi</h1>
       <div className="space-y-4">
-        <p className="text-lg">Total a pagar: ${(total / 100).toFixed(2)} COP</p>
+        <p className="text-lg" style={{ color: 'var(--text-color)' }}>Total a pagar: ${(total / 100).toFixed(2)} COP</p>
         <button
           onClick={handleCreateTransaction}
           className="bg-[#f90] text-white px-4 py-2 rounded hover:bg-[#e68a00]"

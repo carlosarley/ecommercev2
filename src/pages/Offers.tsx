@@ -45,15 +45,15 @@ const Offers: React.FC = () => {
   };
 
   return (
-    <div className="bg-body text-white p-6">
+    <div className="p-6">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-semibold mb-4">Ofertas</h1>
+        <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Ofertas</h1>
         {products.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-menu p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
+                className=" p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
               >
                 <img
                   src={product.image || "/placeholder.jpg"}
@@ -61,7 +61,7 @@ const Offers: React.FC = () => {
                   className="w-full h-48 object-cover rounded-md mb-3 cursor-pointer"
                   onClick={() => handleProductClick(product.id)}
                 />
-                <h3 className="text-lg font-medium">{product.name}</h3>
+                <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
                 <p className="text-md text-button">
                   ${product.price} <span className="text-red-500">(-{product.discount}%)</span>
                 </p>
@@ -75,7 +75,7 @@ const Offers: React.FC = () => {
             ))}
           </div>
         ) : (
-          <p>No hay ofertas disponibles.</p>
+          <p style={{ color: 'var(--text-color)' }}>No hay ofertas disponibles.</p>
         )}
       </div>
     </div>
