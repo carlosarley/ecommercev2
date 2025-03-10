@@ -57,3 +57,6 @@ vite.config.js.timestamp-*
 
 # Sistema operativo
 Thumbs.db
+
+#Wompi
+.env

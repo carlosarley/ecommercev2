@@ -16,7 +16,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import PaymentPage from "./pages/PaymentPage"; // Importado correctamente
 const App: React.FC = () => {
   return (
     <AuthProvider>
@@ -26,6 +26,7 @@ const App: React.FC = () => {
           <Submenu />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/payment" element={<PaymentPage />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/product/:id" element={<ProductDetail />} />

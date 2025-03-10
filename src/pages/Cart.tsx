@@ -1,9 +1,20 @@
-import { useCart } from "../context/CartContext";
+import React from "react"; // Importar React explícitamente
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext"; // Usar el custom hook useCart
 
 const Cart: React.FC = () => {
   const { cartItems, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
+  const navigate = useNavigate();
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  const handleProceedToPayment = () => {
+    if (cartItems.length === 0) {
+      alert("El carrito está vacío. Agrega productos antes de pagar."); // O usa toast si prefieres
+      return;
+    }
+    navigate("/payment", { state: { total: totalPrice, cartItems } }); // Pasar datos al PaymentPage
+  };
 
   return (
     <div className="bg-body text-white p-6">
@@ -59,7 +70,10 @@ const Cart: React.FC = () => {
               >
                 Limpiar carrito
               </button>
-              <button className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]">
+              <button
+                onClick={handleProceedToPayment}
+                className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
+              >
                 Proceder al pago
               </button>
             </div>
