@@ -125,7 +125,7 @@ const Header: React.FC = () => {
         </div>
 
         {/* Iniciar sesión - 10% */}
-        <div className="basis-2/24"> 
+        <div className="basis-1/24"> 
           {currentUser ? (
             <button
               onClick={handleSignOut}
@@ -140,6 +140,10 @@ const Header: React.FC = () => {
               </span>
             </Link>
           )}
+        </div>
+                {/* Iniciar sesión - 10% */}
+        <div className="basis-1/24"> 
+        <Link to="/auth/register">Registrarse</Link>
         </div>
 
         {/* Carrito - 5% */}

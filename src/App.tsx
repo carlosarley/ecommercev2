@@ -6,7 +6,8 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Auth from "./pages/Auth";
 import AdminPanel from "./pages/AdminPanel";
-import SearchPage from "./pages/SearchPage"; // Importado correctamente
+import SearchPage from "./pages/SearchPage";
+import RegisterPage from "./pages/RegisterPage"; // Importa RegisterPage
 import Header from "./components/Header";
 import Submenu from "./components/Submenu";
 import Footer from "./components/Footer";
@@ -16,7 +17,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PaymentPage from "./pages/PaymentPage"; // Importado correctamente
+import PaymentPage from "./pages/PaymentPage";
+
 const App: React.FC = () => {
   return (
     <AuthProvider>
@@ -31,9 +33,13 @@ const App: React.FC = () => {
             <Route path="/categories" element={<Categories />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/search" element={<SearchPage />} /> {/* Añadimos la ruta */}
+            <Route path="/search" element={<SearchPage />} />
+            {/* Anidamos las rutas de autenticación */}
+            <Route path="/auth">
+              <Route index element={<Auth />} /> {/* /auth muestra la página de login */}
+              <Route path="register" element={<RegisterPage />} /> {/* /auth/register muestra la página de registro */}
+            </Route>
           </Routes>
           <Footer />
           <ToastContainer
