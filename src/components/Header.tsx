@@ -68,50 +68,39 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-menu p-4 flex flex-col md:flex-row items-center justify-between shadow-lg" style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
-      <div className="flex w-full md:w-auto justify-between items-center mb-4 md:mb-0">
-        <Link to="/" className="mr-4">
-          <img src="/logo.png" alt="Logo" className="h-10 md:h-12" />
-        </Link>
-        <button
-          className="md:hidden text-white focus:outline-none"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-            />
-          </svg>
-        </button>
-      </div>
-      <div className="flex-1 mx-4 md:mx-0">
-        <div className="relative">
+    <header
+      className="bg-menu p-4 shadow-lg"
+      style={{ position: "sticky", top: 0, zIndex: 1000, width: "100%" }}
+    >
+      <div className="container mx-auto flex flex-wrap gap-5 items-center">
+        {/* Logo - 15% */}
+        <div className="basis-3/24">
+          <Link to="/" className="flex-shrink-0">
+            <img src="/logo.png" alt="Logo" className="h-10 md:h-12" />
+          </Link>
+        </div>
+
+        {/* Barra de búsqueda - 60% */}
+        <div className="basis-14/24">
           <input
             type="text"
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={handleSearchChange}
             onKeyDown={handleSearchSubmit}
-            className="w-full p-2 rounded-full bg-gray-800 dark:bg-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f90] md:max-w-none"
-            style={{ color: 'white' }} // Texto blanco fijo
+            className="w-full p-3 rounded-full bg-gray-800 dark:bg-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f90] text-base md:text-lg"
+            style={{ color: "white" }}
           />
           {searchResults.length > 0 && (
-            <ul className="absolute w-full bg-gray-900 dark:bg-gray-100 border border-gray-700 dark:border-gray-300 mt-2 rounded-lg shadow-lg z-10" style={{ color: 'white' }}>
+            <ul
+              className="absolute w-full bg-gray-900 dark:bg-gray-100 border border-gray-700 dark:border-gray-300 mt-2 rounded-lg shadow-lg z-10"
+              style={{ color: "white" }}
+            >
               {searchResults.map((product) => (
                 <li
                   key={product.id}
                   className="p-3 hover:bg-gray-700 dark:hover:bg-gray-200 cursor-pointer"
-                  style={{ color: 'white' }} // Texto blanco fijo
+                  style={{ color: "white" }}
                   onClick={() => {
                     navigate(`/product/${product.id}`);
                     setSearchTerm("");
@@ -124,47 +113,65 @@ const Header: React.FC = () => {
             </ul>
           )}
         </div>
-      </div>
-      <div className={`w-full md:w-auto ${isMenuOpen ? "block" : "hidden"} md:flex md:items-center md:space-x-4 mt-4 md:mt-0`}>
-        <Link to="/cart" className="w-full md:w-auto mb-4 md:mb-0">
-          <span className="relative flex items-center justify-center bg-[--button-bg] text-[--button-text] px-4 py-2 rounded-full hover:bg-[--button-bg-hover] cursor-pointer w-full text-white">
-            🛒 Carrito
-            {totalItems > 0 && (
-              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </span>
-        </Link>
-        <button
-          onClick={toggleTheme}
-          className="w-full md:w-auto mb-4 md:mb-0 bg-[--button-bg] text-[--button-text] px-4 py-2 rounded-full hover:bg-[--button-bg-hover] flex items-center justify-center"
-        >
-          {theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro'}
-        </button>
-        {currentUser ? (
-          <>
-            <span className="block md:inline text-center md:text-left mb-2 md:mb-0" style={{ color: 'white' }}>{`Bienvenido, ${currentUser.email}`}</span>
+
+        {/* Botón de modo oscuro/claro - 10% */}
+        <div className="basis-1/24">
+          <button
+            onClick={toggleTheme}
+            className="w-full bg-[--button-bg] text-[--button-text] px-2 py-1 rounded-full hover:bg-[--button-bg-hover] text-sm flex items-center justify-center"
+          >
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
+        </div>
+
+        {/* Iniciar sesión - 10% */}
+        <div className="basis-2/24"> 
+          {currentUser ? (
             <button
               onClick={handleSignOut}
-              className="w-full md:w-auto bg-[--button-bg] text-[--button-text] px-4 py-2 rounded-full hover:bg-[--button-bg-hover] mb-2 md:mb-0"
+              className="w-full bg-[--button-bg] text-white px-2 py-1 rounded-full hover:bg-[--button-bg-hover] text-sm flex items-center justify-center"
             >
               Cerrar Sesión
             </button>
-            {currentUser.email === "admin@example.com" && (
-              <Link to="/admin" className="w-full md:w-auto block">
-                <span className="bg-[--button-bg] text-[--button-text] px-4 py-2 rounded-full hover:bg-[--button-bg-hover] w-full text-center">
+          ) : (
+            <Link to="/auth">
+              <span className="w-full bg-[--button-bg] text-white px-2 py-1 rounded-full hover:bg-[--button-bg-hover] text-sm flex items-center justify-center">
+                Iniciar Sesión
+              </span>
+            </Link>
+          )}
+        </div>
+
+        {/* Carrito - 5% */}
+        <div className="basis-1/24">
+          <Link to="/cart" className="flex items-center justify-center">
+            <span className="relative flex items-center justify-center bg-[--button-bg] text-[--button-text] px-2 py-1 rounded-full hover:bg-[--button-bg-hover]">
+              🛒
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </span>
+          </Link>
+        </div>
+
+        {/* Menú desplegable (solo en mobile cuando se abre) */}
+        {isMenuOpen && (
+          <div className="md:hidden mt-2 w-full bg-menu p-2 rounded-lg shadow-lg">
+            {currentUser && (
+              <div className="mb-2">
+                <span style={{ color: "white" }}>{`Bienvenido, ${currentUser.email}`}</span>
+              </div>
+            )}
+            {currentUser && currentUser.email === "admin@example.com" && (
+              <Link to="/admin" className="block w-full text-center mb-2">
+                <span className="bg-[--button-bg] text-[--button-text] px-2 py-1 rounded-full hover:bg-[--button-bg-hover]">
                   Panel Admin
                 </span>
               </Link>
             )}
-          </>
-        ) : (
-          <Link to="/auth" className="w-full md:w-auto">
-            <span className="bg-[--button-bg] text-[--button-text] px-4 py-2 rounded-full hover:bg-[--button-bg-hover] w-full text-center text-white">
-              Iniciar Sesión
-            </span>
-          </Link>
+          </div>
         )}
       </div>
     </header>

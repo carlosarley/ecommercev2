@@ -29,6 +29,10 @@ const ProductList: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       }) as Product);
+      // Log para inspeccionar categorías
+      productsData.forEach((product) => {
+        console.log(`Producto: ${product.name}, Categoría: ${product.category}`);
+      });
       setProducts(productsData);
     });
     return () => unsubscribe();
@@ -49,11 +53,11 @@ const ProductList: React.FC = () => {
           <select
             value={category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
-            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-button"
+            className="p-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-button"
             style={{ color: 'var(--text-color)' }}
           >
             {categories.map((cat) => (
-              <option key={cat} value={cat} className="text-black">
+              <option key={cat} value={cat} className="">
                 {cat}
               </option>
             ))}
@@ -61,7 +65,13 @@ const ProductList: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {products
-            .filter((product) => category === "all" || product.category === category)
+            .filter((product) => {
+              if (category === "all") return true;
+              // Convertimos ambas categorías a minúsculas para la comparación
+              const productCategory = product.category ? product.category.toLowerCase() : "";
+              const selectedCategory = category.toLowerCase();
+              return productCategory === selectedCategory;
+            })
             .map((product) => (
               <div
                 key={product.id}

@@ -2,59 +2,74 @@
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 
-:root {
-  /* Modo oscuro (por defecto) */
-  --background-color: #000; /* Fondo general */
-  --text-color: #ffffff; /* Texto blanco en modo oscuro */
-  --menu-bg: #151515; /* Fondo del menú (fijo) */
-  --toast-bg: #1a1a1a; /* Fondo de los toasts */
-  --toast-border: #f90; /* Borde de los toasts */
-  --toast-text: #fff; /* Texto de los toasts */
-  --button-bg: #f90; /* Fondo de botones (fijo) */
-  --button-text: #fff; /* Texto de botones (fijo) */
-  --button-bg-hover: #e68a00; /* Fondo de botones en hover (fijo) */
-}
-
-/* Modo claro */
-[data-theme="light"] {
-  --background-color: #e3e6e6; /* Fondo claro */
-  --text-color: #000000; /* Texto oscuro en modo claro */
-  --menu-bg: #151515; /* Fondo del menú (fijo, no cambia) */
-  --toast-bg: #ffffff; /* Fondo de los toasts */
-  --toast-border: #f90; /* Borde de los toasts */
-  --toast-text: #000; /* Texto de los toasts */
-  --button-bg: #f90; /* Fondo de botones (fijo) */
-  --button-text: #fff; /* Texto de botones (fijo) */
-  --button-bg-hover: #e68a00; /* Fondo de botones en hover (fijo) */
-}
-
-/* Aplicar las variables a los elementos */
-body {
-  background-color: var(--background-color);
-  color: var(--text-color); /* Texto del body cambia según el tema */
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-button {
-  cursor: pointer;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.bg-menu {
-  background-color: var(--menu-bg) !important; /* Asegura que el menú use #151515 */
-}
-
-/* Estilos para header fijo */
+/* Estilos para el header */
 header {
   position: sticky;
   top: 0;
-  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  z-index: 1000;
   width: 100%;
 }
 
-/* Estilos de Toastify */
+
+
+/* Ajustes responsivos para el header */
+@media (max-width: 768px) {
+  header .flex {
+    flex-wrap: wrap; /* Permitir que los elementos se apilen en mobile */
+    justify-content: space-between;
+  }
+}
+
+/* Estilos para las flechas del slider (mantener como estaban) */
+.slick-prev, .slick-next {
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  z-index: 10;
+  transition: background 0.3s ease;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.slick-prev:hover, .slick-next:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.slick-prev:before, .slick-next:before {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .slick-prev, .slick-next {
+    width: 30px;
+    height: 30px;
+  }
+
+  .slick-prev {
+    left: 5px;
+  }
+
+  .slick-next {
+    right: 5px;
+  }
+}
+
+/* Ajustes responsivos para el título del banner */
+@media (max-width: 640px) {
+  .text-4xl.sm\:text-2xl {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-4xl.sm\:text-2xl {
+    font-size: 1.25rem;
+  }
+}
+
+/* Estilos de Toastify (mantener como estaban) */
 .Toastify__toast {
   background: var(--toast-bg) !important;
   color: var(--toast-text) !important;
@@ -73,5 +88,48 @@ header {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Resto de las variables y estilos (mantener como estaban) */
+:root {
+  /* Modo oscuro (por defecto) */
+  --background-color: #000;
+  --text-color: #ffffff;
+  --menu-bg: #151515;
+  --toast-bg: #1a1a1a;
+  --toast-border: #f90;
+  --toast-text: #fff;
+  --button-bg: #f90;
+  --button-text: #fff;
+  --button-bg-hover: #e68a00;
+}
+
+[data-theme="light"] {
+  --background-color: #e3e6e6;
+  --text-color: #000000;
+  --menu-bg: #151515;
+  --toast-bg: #ffffff;
+  --toast-border: #f90;
+  --toast-text: #000;
+  --button-bg: #f90;
+  --button-text: #fff;
+  --button-bg-hover: #e68a00;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bg-menu {
+  background-color: var(--menu-bg) !important;
 }
