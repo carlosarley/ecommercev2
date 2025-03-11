@@ -133,3 +133,8 @@ button {
 .bg-menu {
   background-color: var(--menu-bg) !important;
 }
+.bg-orange {
+  background: #ff9900;
+  color: #fff;
+  font-size: 1.3rem;
+}
