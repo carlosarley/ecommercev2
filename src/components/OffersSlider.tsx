@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../utils/formatPrice"; // Ajusta la ruta
 
 interface Product {
   id: string;
@@ -76,7 +77,7 @@ const OffersSlider: React.FC = () => {
                   />
                   <p className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</p>
                   <p className="text-md text-button">
-                    ${product.price} <span className="text-red-500">(-{product.discount}%)</span>
+                    {formatPrice(product.price)} COP <span className="text-red-500">(-{product.discount}%)</span>
                   </p>
                   <button
                     onClick={() => addToCart(product)}

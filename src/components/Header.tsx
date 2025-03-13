@@ -141,8 +141,8 @@ const Header: React.FC = () => {
             </Link>
           )}
         </div>
-                {/* Iniciar sesión - 10% */}
-        <div className="basis-1/24"> 
+                {/* Registrarse - 10% */}
+        <div className="basis-1/24 text-white"> 
         <Link to="/auth/register">Registrarse</Link>
         </div>
 

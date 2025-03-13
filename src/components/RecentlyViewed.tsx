@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../utils/formatPrice"; // Ajusta la ruta
 import { Product } from "../types";
 
 const RecentlyViewed: React.FC = () => {
@@ -70,7 +71,7 @@ const RecentlyViewed: React.FC = () => {
                     onClick={() => handleProductClick(product.id)}
                   />
                   <p className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</p>
-                  <p className="text-md text-button">${product.price}</p>
+                  <p className="text-md text-button">{formatPrice(product.price)} COP</p>
                   <button
                     onClick={() => handleAddToCart(product)}
                     className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"

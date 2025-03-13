@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, collection, addDoc, onSnapshot, Timestamp } from "firebase/firestore";
+import { doc, getDoc, collection, onSnapshot, Timestamp, addDoc } from "firebase/firestore"; // Añadimos addDoc aquí
 import { db } from "../firebase";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { formatPrice } from "../utils/formatPrice";
 import { Product } from "../types";
 
 interface Review {
@@ -99,7 +100,7 @@ const ProductDetail: React.FC = () => {
         </div>
         <div className="flex flex-col justify-between">
           <div>
-            <p className="text-2xl text-[#f90] mb-4">${product.price}</p>
+            <p className="text-2xl text-[#f90] mb-4">{formatPrice(product.price)} COP</p>
             {product.discount && product.discount > 0 && (
               <p className="text-md text-red-500 mb-4">Descuento: {product.discount}%</p>
             )}

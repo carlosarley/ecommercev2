@@ -23,11 +23,11 @@ const Auth: React.FC = () => {
   return (
     <div className="bg-body text-white p-6">
       <div className="container mx-auto max-w-md">
-        <h1 className="text-3xl font-semibold mb-4">Iniciar Sesión</h1>
+        <h1 className="text-3xl font-semibold mb-4 " style={{ color: 'var(--text-color)' }}>Iniciar Sesión</h1>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1">Correo Electrónico</label>
+            <label className="block mb-1 " style={{ color: 'var(--text-color)' }}>Correo Electrónico</label>
             <input
               type="email"
               value={email}
@@ -37,7 +37,7 @@ const Auth: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block mb-1">Contraseña</label>
+            <label className="block mb-1" style={{ color: 'var(--text-color)' }}>Contraseña</label>
             <input
               type="password"
               value={password}

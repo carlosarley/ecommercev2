@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 import { getFunctions, httpsCallable } from "firebase/functions";
@@ -85,10 +85,12 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto p-6">
-      <h1 className="text-2xl font-bold text-center">Registro</h1>
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto p-6  rounded-lg shadow-lg">
+      <h1 className="text-2xl font-bold text-center" style={{ color: 'var(--text-color)' }}>
+        Registro
+      </h1>
       <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="fullName" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
           Nombre Completo
         </label>
         <input
@@ -96,12 +98,12 @@ const RegisterForm: React.FC = () => {
           id="fullName"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 focus:ring-[#f90] focus:border-[#f90] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           required
         />
       </div>
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
           Email
         </label>
         <input
@@ -109,12 +111,12 @@ const RegisterForm: React.FC = () => {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 focus:ring-[#f90] focus:border-[#f90] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           required
         />
       </div>
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-medium" style={{ color: 'var(--text-color)' }}>
           Contraseña
         </label>
         <input
@@ -122,20 +124,20 @@ const RegisterForm: React.FC = () => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 focus:ring-[#f90] focus:border-[#f90] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           required
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400"
+        className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-bg-hover)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f90] disabled:bg-gray-400 dark:disabled:bg-gray-600"
       >
         {loading ? "Registrando..." : "Registrarse"}
       </button>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm" style={{ color: 'var(--text-color)' }}>
         ¿Ya tienes cuenta?{" "}
-        <a href="/auth" className="text-indigo-600 hover:underline">
+        <a href="/auth" className="text-[var(--button-bg)] hover:underline">
           Inicia sesión
         </a>
       </p>
@@ -147,7 +149,7 @@ const RegisterForm: React.FC = () => {
 const RegisterPage: React.FC = () => {
   return (
     <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_SITE_KEY}>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--background-color)] flex items-center justify-center">
         <RegisterForm />
       </div>
     </GoogleReCaptchaProvider>

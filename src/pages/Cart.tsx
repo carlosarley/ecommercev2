@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../utils/formatPrice"; // Ajusta la ruta
 
 const Cart: React.FC = () => {
   const { cartItems, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -35,8 +36,8 @@ const Cart: React.FC = () => {
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{item.name}</h3>
-                    <p className="text-md text-button">${item.price} x {item.quantity}</p>
-                    <p className="text-md" style={{ color: 'var(--text-color)' }}>Subtotal: ${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="text-md text-button">{formatPrice(item.price)} COP x {item.quantity}</p>
+                    <p className="text-md" style={{ color: 'var(--text-color)' }}>Subtotal: {formatPrice(item.price * item.quantity)} COP</p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -63,7 +64,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
             <div className="mt-6 text-right">
-              <p className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: ${totalPrice.toFixed(2)}</p>
+              <p className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: {formatPrice(totalPrice)} COP</p>
               <button
                 onClick={clearCart}
                 className="mt-4 bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 mr-4"

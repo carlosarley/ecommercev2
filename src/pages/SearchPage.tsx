@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { formatPrice } from "../utils/formatPrice"; // Ajusta la ruta
 import { Product } from "../types";
 
 const SearchPage: React.FC = () => {
@@ -48,7 +49,7 @@ const SearchPage: React.FC = () => {
             <div key={product.id} className="bg-menu p-4 rounded-lg border border-gray-700">
               <img src={product.image || "/placeholder.jpg"} alt={product.name} className="w-full h-40 object-cover rounded-md mb-2" />
               <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
-              <p className="text-md text-button">${product.price}</p>
+              <p className="text-md text-button">{formatPrice(product.price)} COP</p>
               <button
                 onClick={() => navigate(`/product/${product.id}`)}
                 className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"

@@ -3,6 +3,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "../utils/formatPrice";
 
 interface Product {
   id: string;
@@ -29,7 +30,6 @@ const ProductList: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       }) as Product);
-      // Log para inspeccionar categorías
       productsData.forEach((product) => {
         console.log(`Producto: ${product.name}, Categoría: ${product.category}`);
       });
@@ -44,6 +44,10 @@ const ProductList: React.FC = () => {
     navigate(`/product/${id}`);
   };
 
+  const calculateDiscountedPrice = (price: number, discount: number): number => {
+    return price - (price * discount) / 100;
+  };
+
   return (
     <div className="p-6">
       <div className="container mx-auto">
@@ -53,7 +57,7 @@ const ProductList: React.FC = () => {
           <select
             value={category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
-            className="p-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-button"
+            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-button"
             style={{ color: 'var(--text-color)' }}
           >
             {categories.map((cat) => (
@@ -67,7 +71,6 @@ const ProductList: React.FC = () => {
           {products
             .filter((product) => {
               if (category === "all") return true;
-              // Convertimos ambas categorías a minúsculas para la comparación
               const productCategory = product.category ? product.category.toLowerCase() : "";
               const selectedCategory = category.toLowerCase();
               return productCategory === selectedCategory;
@@ -75,7 +78,7 @@ const ProductList: React.FC = () => {
             .map((product) => (
               <div
                 key={product.id}
-                className=" p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
+                className="p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
               >
                 <img
                   src={product.image || "/placeholder.jpg"}
@@ -84,7 +87,17 @@ const ProductList: React.FC = () => {
                   onClick={() => handleProductClick(product.id)}
                 />
                 <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
-                <p className="text-md text-button">${product.price}</p>
+                {product.discount && product.discount > 0 ? (
+                  <div>
+                    <p className="text-md text-gray-500 line-through">{formatPrice(product.price)} COP</p>
+                    <p className="text-md text-button">
+                      {formatPrice(calculateDiscountedPrice(product.price, product.discount))} COP{" "}
+                      <span className="text-red-500">(-{product.discount}%)</span>
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-md text-button">{formatPrice(product.price)} COP</p>
+                )}
                 <button
                   onClick={() => addToCart(product)}
                   className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
