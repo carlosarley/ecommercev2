@@ -78,32 +78,36 @@ const ProductList: React.FC = () => {
             .map((product) => (
               <div
                 key={product.id}
-                className="p-4 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow"
+                className="flex flex-col min-h-[400px] p-8 rounded-lg text-center border border-gray-700 hover:shadow-xl transition-shadow bg-white justify-between"
               >
-                <img
-                  src={product.image || "/placeholder.jpg"}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-md mb-3 cursor-pointer"
-                  onClick={() => handleProductClick(product.id)}
-                />
-                <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
-                {product.discount && product.discount > 0 ? (
-                  <div>
-                    <p className="text-md text-gray-500 line-through">{formatPrice(product.price)} COP</p>
-                    <p className="text-md text-button">
-                      {formatPrice(calculateDiscountedPrice(product.price, product.discount))} COP{" "}
-                      <span className="text-red-500">(-{product.discount}%)</span>
-                    </p>
-                  </div>
-                ) : (
-                  <p className="text-md text-button">{formatPrice(product.price)} COP</p>
-                )}
-                <button
-                  onClick={() => addToCart(product)}
-                  className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
-                >
-                  Añadir al carrito
-                </button>
+                <div className="flex-1">
+                  <img
+                    src={product.image || "/placeholder.jpg"}
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-md mb-4 cursor-pointer"
+                    onClick={() => handleProductClick(product.id)}
+                  />
+                  <h3 className="text-lg font-medium text-black truncate">{product.name}</h3>
+                </div>
+                <div className="mt-auto">
+                  {product.discount && product.discount > 0 ? (
+                    <div>
+                      <p className="text-md text-gray-500 line-through text-black mb-1">{formatPrice(product.price)} COP</p>
+                      <p className="text-md text-button text-black mb-2">
+                        {formatPrice(calculateDiscountedPrice(product.price, product.discount))} COP{" "}
+                        <span className="text-red-500">(-{product.discount}%)</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                  )}
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
+                  >
+                    Añadir al carrito
+                  </button>
+                </div>
               </div>
             ))}
         </div>

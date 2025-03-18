@@ -73,21 +73,25 @@ const TopSellingSlider: React.FC = () => {
           <Slider {...settings}>
             {topSelling.map((product) => (
               <div key={product.id} className="p-4">
-                <div className="p-4 rounded-lg text-center border border-gray-700 hover:shadow-lg transition-shadow">
-                  <img
-                    src={product.image || "/placeholder.jpg"}
-                    alt={product.name}
-                    className="w-full h-40 object-cover rounded-md mb-2 cursor-pointer"
-                    onClick={() => handleProductClick(product.id)}
-                  />
-                  <p className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</p>
-                  <p className="text-md text-button">{formatPrice(product.price)} COP</p>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
-                  >
-                    Añadir al carrito
-                  </button>
+                <div className="flex flex-col min-h-[400px] p-8 rounded-lg text-center border border-gray-700 hover:shadow-lg transition-shadow bg-white justify-between">
+                  <div className="flex-1">
+                    <img
+                      src={product.image || "/placeholder.jpg"}
+                      alt={product.name}
+                      className="w-full h-40 object-cover rounded-md mb-4 cursor-pointer"
+                      onClick={() => handleProductClick(product.id)}
+                    />
+                    <p className="text-lg font-medium text-black truncate">{product.name}</p>
+                  </div>
+                  <div className="mt-auto">
+                    <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                    <button
+                      onClick={() => addToCart(product)}
+                      className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
+                    >
+                      Añadir al carrito
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

@@ -76,7 +76,7 @@ const Header: React.FC = () => {
         {/* Logo - 15% */}
         <div className="basis-3/24">
           <Link to="/" className="flex-shrink-0">
-            <img src="/logo.png" alt="Logo" className="h-10 md:h-12" />
+            <img src="https://github.com/carlosarley/ecommercev2/raw/main/src/assets/img/Recurso-1" alt="Logo" className="h-10 md:h-12" />
           </Link>
         </div>
 

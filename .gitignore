@@ -45,7 +45,7 @@ functions/dist/
 
 # Scripts (ya lo tienes, pero lo mantengo por claridad)
 scripts/
-
+scripts/serviceAccountKey.json
 # Vite
 vite.config.ts.timestamp-*
 vite.config.js.timestamp-*

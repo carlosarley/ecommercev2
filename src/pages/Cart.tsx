@@ -27,7 +27,7 @@ const Cart: React.FC = () => {
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center bg-menu p-4 rounded-lg border border-gray-700"
+                  className="flex items-center bg-white p-4 rounded-lg border border-gray-700"
                 >
                   <img
                     src={item.image || "/placeholder.jpg"}
@@ -35,9 +35,9 @@ const Cart: React.FC = () => {
                     className="w-20 h-20 object-cover rounded-md mr-4"
                   />
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{item.name}</h3>
-                    <p className="text-md text-button">{formatPrice(item.price)} COP x {item.quantity}</p>
-                    <p className="text-md" style={{ color: 'var(--text-color)' }}>Subtotal: {formatPrice(item.price * item.quantity)} COP</p>
+                    <h3 className="text-lg font-medium text-black" >{item.name}</h3>
+                    <p className="text-md text-button text-black">{formatPrice(item.price)} COP x {item.quantity}</p>
+                    <p className="text-md text-black" >Subtotal: {formatPrice(item.price * item.quantity)} COP</p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -45,7 +45,7 @@ const Cart: React.FC = () => {
                       >
                         −
                       </button>
-                      <span className="mx-3" style={{ color: 'var(--text-color)' }}>{item.quantity}</span>
+                      <span className="mx-3 text-black" >{item.quantity}</span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
                         className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"

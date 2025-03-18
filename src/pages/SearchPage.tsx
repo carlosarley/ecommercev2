@@ -46,16 +46,20 @@ const SearchPage: React.FC = () => {
       {products.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="bg-menu p-4 rounded-lg border border-gray-700">
-              <img src={product.image || "/placeholder.jpg"} alt={product.name} className="w-full h-40 object-cover rounded-md mb-2" />
-              <h3 className="text-lg font-medium" style={{ color: 'var(--text-color)' }}>{product.name}</h3>
-              <p className="text-md text-button">{formatPrice(product.price)} COP</p>
-              <button
-                onClick={() => navigate(`/product/${product.id}`)}
-                className="mt-2 bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
-              >
-                Ver detalles
-              </button>
+            <div key={product.id} className="flex flex-col min-h-[400px] p-8 rounded-lg border border-gray-700 bg-white justify-between">
+              <div className="flex-1">
+                <img src={product.image || "/placeholder.jpg"} alt={product.name} className="w-full h-40 object-cover rounded-md mb-4" />
+                <h3 className="text-lg font-medium text-black truncate">{product.name}</h3>
+              </div>
+              <div className="mt-auto">
+                <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                <button
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
+                >
+                  Ver detalles
+                </button>
+              </div>
             </div>
           ))}
         </div>
