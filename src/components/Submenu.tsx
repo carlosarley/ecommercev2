@@ -21,7 +21,7 @@ const Submenu: React.FC = () => {
     }
   }, []);
 
- /* const handleGetLocation = () => {
+  const handleGetLocation = () => {
     if (!navigator.geolocation) {
       setLocationError("La geolocalización no es compatible con este navegador.");
       return;
@@ -86,7 +86,11 @@ const Submenu: React.FC = () => {
       });
     }
   };
-  <div className="flex items-center space-x-4 w-full md:w-auto">
+
+  return (
+    <nav className="bg-menu text-white p-4">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
+        <div className="flex items-center space-x-4 w-full md:w-auto">
           {!address && (
             <button
               onClick={handleGetLocation}
@@ -141,12 +145,6 @@ const Submenu: React.FC = () => {
             </div>
           )}
         </div>
-  */
-
-  return (
-    <nav className="bg-menu text-white p-4">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        
         <div className="flex items-center">
           <button
             className="md:hidden text-white focus:outline-none mr-2"
