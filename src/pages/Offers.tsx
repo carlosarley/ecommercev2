@@ -66,8 +66,9 @@ const Offers: React.FC = () => {
                   <h3 className="text-lg font-medium text-black truncate">{product.name}</h3>
                 </div>
                 <div className="mt-auto">
-                  <p className="text-md text-button text-black mb-2">
-                    {formatPrice(product.price)} COP <span className="text-red-500">(-{product.discount}%)</span>
+                  <p className="text-2xl text-button text-black mb-2">
+                  <span className="text-red-500">(-{product.discount}%)</span><br />
+                    ${formatPrice(product.price)} 
                   </p>
                   <button
                     onClick={() => addToCart(product)}

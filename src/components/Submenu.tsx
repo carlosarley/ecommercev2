@@ -1,96 +1,101 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 
-interface Address {
-  country: string;
-  city: string;
-}
+// Interface y estados relacionados con location (comentados para posible uso futuro)
+// interface Address {
+//   country: string;
+//   city: string;
+// }
 
 const Submenu: React.FC = () => {
-  const [address, setAddress] = useState<Address | null>(null);
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [locationError, setLocationError] = useState("");
+  // Estados relacionados con location (comentados para posible uso futuro)
+  // const [address, setAddress] = useState<Address | null>(null);
+  // const [showLocationModal, setShowLocationModal] = useState(false);
+  // const [locationError, setLocationError] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para el menú hamburguesa
 
-  useEffect(() => {
-    const savedLocation = localStorage.getItem("userLocation");
-    if (savedLocation) {
-      const [city, country] = savedLocation.split(", ");
-      setAddress({ city, country });
-    }
-  }, []);
+  // useEffect para obtener la ubicación guardada (comentado para posible uso futuro)
+  // useEffect(() => {
+  //   const savedLocation = localStorage.getItem("userLocation");
+  //   if (savedLocation) {
+  //     const [city, country] = savedLocation.split(", ");
+  //     setAddress({ city, country });
+  //   }
+  // }, []);
 
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationError("La geolocalización no es compatible con este navegador.");
-      return;
-    }
+  // Función para obtener la geolocalización (comentada para posible uso futuro)
+  // const handleGetLocation = () => {
+  //   if (!navigator.geolocation) {
+  //     setLocationError("La geolocalización no es compatible con este navegador.");
+  //     return;
+  //   }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-          );
-          if (!response.ok) {
-            throw new Error(`Error en Nominatim: ${response.status} ${response.statusText}`);
-          }
-          const data = await response.json();
-          const locationString = `${data.address.city || data.address.town || data.address.village || ""}, ${
-            data.address.country || ""
-          }`.trim();
-          if (locationString) {
-            const [city, country] = locationString.split(", ");
-            setAddress({ city, country });
-            localStorage.setItem("userLocation", locationString);
-            setLocationError("");
-          } else {
-            throw new Error("No se encontraron datos de dirección.");
-          }
-        } catch (error) {
-          console.error("Error al obtener la dirección:", error);
-          setLocationError("No se pudo obtener la dirección. Ingresa tu ubicación manualmente.");
-          setShowLocationModal(true);
-        }
-      },
-      (error) => {
-        console.error("Error al obtener la ubicación:", error);
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationError("Permiso denegado. Ingresa tu ubicación manualmente.");
-        } else {
-          setLocationError("Error al obtener la ubicación. Ingresa tu ubicación manualmente.");
-        }
-        setShowLocationModal(true);
-      }
-    );
-  };
+  //   navigator.geolocation.getCurrentPosition(
+  //     async (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       try {
+  //         const response = await fetch(
+  //           `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+  //         );
+  //         if (!response.ok) {
+  //           throw new Error(`Error en Nominatim: ${response.status} ${response.statusText}`);
+  //         }
+  //         const data = await response.json();
+  //         const locationString = `${data.address.city || data.address.town || data.address.village || ""}, ${
+  //           data.address.country || ""
+  //         }`.trim();
+  //         if (locationString) {
+  //           const [city, country] = locationString.split(", ");
+  //           setAddress({ city, country });
+  //           localStorage.setItem("userLocation", locationString);
+  //           setLocationError("");
+  //         } else {
+  //           throw new Error("No se encontraron datos de dirección.");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error al obtener la dirección:", error);
+  //         setLocationError("No se pudo obtener la dirección. Ingresa tu ubicación manualmente.");
+  //         setShowLocationModal(true);
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error("Error al obtener la ubicación:", error);
+  //       if (error.code === error.PERMISSION_DENIED) {
+  //         setLocationError("Permiso denegado. Ingresa tu ubicación manualmente.");
+  //       } else {
+  //         setLocationError("Error al obtener la ubicación. Ingresa tu ubicación manualmente.");
+  //       }
+  //       setShowLocationModal(true);
+  //     }
+  //   );
+  // };
 
-  const handleSaveLocation = (location: string) => {
-    const [city, country] = location.split(", ");
-    if (city && country) {
-      const addressData: Address = { city, country };
-      setAddress(addressData);
-      localStorage.setItem("userLocation", location);
-      setShowLocationModal(false);
-      setLocationError("");
-      toast.success("Ubicación guardada exitosamente.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    } else {
-      toast.error("Por favor, usa el formato 'Ciudad, País' (e.g., Bogotá, Colombia).", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    }
-  };
+  // Función para guardar la ubicación manualmente (comentada para posible uso futuro)
+  // const handleSaveLocation = (location: string) => {
+  //   const [city, country] = location.split(", ");
+  //   if (city && country) {
+  //     const addressData: Address = { city, country };
+  //     setAddress(addressData);
+  //     localStorage.setItem("userLocation", location);
+  //     setShowLocationModal(false);
+  //     setLocationError("");
+  //     toast.success("Ubicación guardada exitosamente.", {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //     });
+  //   } else {
+  //     toast.error("Por favor, usa el formato 'Ciudad, País' (e.g., Bogotá, Colombia).", {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //     });
+  //   }
+  // };
 
   return (
     <nav className="bg-menu text-white p-4">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center space-x-4 w-full md:w-auto">
+        {/* Sección de ubicación (comentada para posible uso futuro) */}
+        {/* <div className="flex items-center space-x-4 w-full md:w-auto">
           {!address && (
             <button
               onClick={handleGetLocation}
@@ -144,10 +149,10 @@ const Submenu: React.FC = () => {
               </div>
             </div>
           )}
-        </div>
-        <div className="flex items-center">
+        </div> */}
+        <div className="flex items-center w-full justify-between">
           <button
-            className="md:hidden text-white focus:outline-none mr-2"
+            className="md:hidden text-white focus:outline-none"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >

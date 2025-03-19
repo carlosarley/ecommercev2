@@ -52,7 +52,7 @@ const SearchPage: React.FC = () => {
                 <h3 className="text-lg font-medium text-black truncate">{product.name}</h3>
               </div>
               <div className="mt-auto">
-                <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                <p className="text-2x1 text-button text-black mb-2">${formatPrice(product.price)} </p>
                 <button
                   onClick={() => navigate(`/product/${product.id}`)}
                   className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"

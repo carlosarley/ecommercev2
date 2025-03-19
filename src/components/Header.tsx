@@ -76,7 +76,7 @@ const Header: React.FC = () => {
         {/* Logo - 15% */}
         <div className="basis-3/24">
           <Link to="/" className="flex-shrink-0">
-            <img src="https://github.com/carlosarley/ecommercev2/raw/main/src/assets/img/Recurso-1" alt="Logo" className="h-10 md:h-12" />
+            <img src="https://github.com/carlosarley/ecommercev2/raw/main/src/assets/img/Recurso-1.svg" alt="Logo" className="h-10 md:h-12" />
           </Link>
         </div>
 
@@ -89,25 +89,25 @@ const Header: React.FC = () => {
             onChange={handleSearchChange}
             onKeyDown={handleSearchSubmit}
             className="w-full p-3 rounded-full bg-gray-800 dark:bg-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f90] text-base md:text-lg"
-            style={{ color: "white" }}
+            style={{ color: "black" }}
           />
           {searchResults.length > 0 && (
             <ul
-              className="absolute w-full bg-gray-900 dark:bg-gray-100 border border-gray-700 dark:border-gray-300 mt-2 rounded-lg shadow-lg z-10"
-              style={{ color: "white" }}
+              className="absolute w-120 bg-gray-900 dark:bg-gray-100 border border-gray-700 dark:border-gray-300 mt-2 rounded-lg shadow-lg z-10"
+              style={{ color: "black" }}
             >
               {searchResults.map((product) => (
                 <li
                   key={product.id}
                   className="p-3 hover:bg-gray-700 dark:hover:bg-gray-200 cursor-pointer"
-                  style={{ color: "white" }}
+                  style={{ color: "black" }}
                   onClick={() => {
                     navigate(`/product/${product.id}`);
                     setSearchTerm("");
                     setSearchResults([]);
                   }}
                 >
-                  {product.name} - ${product.price}
+                  {product.name} 
                 </li>
               ))}
             </ul>
@@ -165,7 +165,7 @@ const Header: React.FC = () => {
           <div className="md:hidden mt-2 w-full bg-menu p-2 rounded-lg shadow-lg">
             {currentUser && (
               <div className="mb-2">
-                <span style={{ color: "white" }}>{`Bienvenido, ${currentUser.email}`}</span>
+                <span style={{ color: "black" }}>{`Bienvenido, ${currentUser.email}`}</span>
               </div>
             )}
             {currentUser && currentUser.email === "admin@example.com" && (

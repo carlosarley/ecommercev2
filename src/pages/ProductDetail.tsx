@@ -89,7 +89,7 @@ const ProductDetail: React.FC = () => {
     <div className="container mx-auto p-6">
       <button
         onClick={() => navigate(-1)}
-        className="mb-4 text-[#f90] hover:underline"
+        className="bg-[#f90] text-white px-6 py-3 rounded-md hover:bg-[#e68a00]"
       >
         ← Volver
       </button>

@@ -74,7 +74,7 @@ const RecentlyViewed: React.FC = () => {
                     <p className="text-lg font-medium text-black truncate">{product.name}</p>
                   </div>
                   <div className="mt-auto">
-                    <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                    <p className="text-2xl text-button text-black mb-2">${formatPrice(product.price)}</p>
                     <button
                       onClick={() => handleAddToCart(product)}
                       className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"

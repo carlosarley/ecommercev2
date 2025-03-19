@@ -36,8 +36,8 @@ const Cart: React.FC = () => {
                   />
                   <div className="flex-1">
                     <h3 className="text-lg font-medium text-black" >{item.name}</h3>
-                    <p className="text-md text-button text-black">{formatPrice(item.price)} COP x {item.quantity}</p>
-                    <p className="text-md text-black" >Subtotal: {formatPrice(item.price * item.quantity)} COP</p>
+                    <p className="text-2xl text-button text-black">${formatPrice(item.price)} x {item.quantity}</p>
+                    <p className="text-md text-black" >Subtotal: ${formatPrice(item.price * item.quantity)} </p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -64,7 +64,7 @@ const Cart: React.FC = () => {
               ))}
             </div>
             <div className="mt-6 text-right">
-              <p className="text-xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: {formatPrice(totalPrice)} COP</p>
+              <p className="text-3xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: ${formatPrice(totalPrice)} </p>
               <button
                 onClick={clearCart}
                 className="mt-4 bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 mr-4"

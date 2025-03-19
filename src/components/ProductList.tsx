@@ -38,7 +38,7 @@ const ProductList: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const categories = ["all", "Placas Base", "tarjetas gráficas", "procesadores", "memoria ram"];
+  const categories = ["all", "Almacenamiento Externo", "Chasís", "Coolers", "Diadema", "Fuente de poder", "Memoria Ram", "Mouse", "Mouse Pads", "Motherboards", "Procesadores",  "SSD",  "Tarjeta Gráfica" ];
 
   const handleProductClick = (id: string) => {
     navigate(`/product/${id}`);
@@ -57,9 +57,7 @@ const ProductList: React.FC = () => {
           <select
             value={category}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
-            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-button"
-            style={{ color: 'var(--text-color)' }}
-          >
+            className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-button text-black bg-white">
             {categories.map((cat) => (
               <option key={cat} value={cat} className="">
                 {cat}
@@ -92,14 +90,14 @@ const ProductList: React.FC = () => {
                 <div className="mt-auto">
                   {product.discount && product.discount > 0 ? (
                     <div>
-                      <p className="text-md text-gray-500 line-through text-black mb-1">{formatPrice(product.price)} COP</p>
-                      <p className="text-md text-button text-black mb-2">
-                        {formatPrice(calculateDiscountedPrice(product.price, product.discount))} COP{" "}
+                      <p className="text-xl text-gray-500 line-through text-black mb-1">${formatPrice(product.price)}</p>
+                      <p className="text-2xl text-button text-black mb-2">
+                        ${formatPrice(calculateDiscountedPrice(product.price, product.discount))} {" "}
                         <span className="text-red-500">(-{product.discount}%)</span>
                       </p>
                     </div>
                   ) : (
-                    <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                    <p className="text-2xl text-button text-black mb-2">${formatPrice(product.price)} </p>
                   )}
                   <button
                     onClick={() => addToCart(product)}

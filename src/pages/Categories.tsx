@@ -35,7 +35,7 @@ const Categories: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const categories = ["all", "Placas Base", "tarjetas gráficas", "procesadores", "memoria ram"];
+  const categories = ["all", "Almacenamiento Externo", "Chasís", "Coolers", "Diadema", "Fuente de poder", "Memoria Ram", "Mouse", "Mouse Pads", "Motherboards", "Procesadores",  "SSD",  "Tarjeta Gráfica"  ];
 
   const handleProductClick = (id: string) => {
     navigate(`/product/${id}`);
@@ -79,7 +79,7 @@ const Categories: React.FC = () => {
                     <h3 className="text-lg font-medium text-black truncate">{product.name}</h3>
                   </div>
                   <div className="mt-auto">
-                    <p className="text-md text-button text-black mb-2">{formatPrice(product.price)} COP</p>
+                    <p className="text-2xl text-button text-black mb-2">${formatPrice(product.price)}</p>
                     <button
                       onClick={() => addToCart(product)}
                       className="w-full bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
