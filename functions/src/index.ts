@@ -1,16 +1,21 @@
-import * as functions from "firebase-functions";
+import { onCall } from "firebase-functions/v2/https"; // Eliminamos HttpsOptions
+import { logger } from "firebase-functions/v2";
 import axios from "axios";
 import * as nodemailer from "nodemailer";
+import * as admin from "firebase-admin";
 import { TransactionData, TransactionResponse } from "./types";
 
-const WOMPI_PRIVATE_KEY = functions.config().wompi.private_key;
+// Inicializa Firebase Admin
+admin.initializeApp();
+
+const WOMPI_PRIVATE_KEY = process.env.WOMPI_PRIVATE_KEY;
 const WOMPI_SANDBOX_URL = "https://sandbox.wompi.co/v1/transactions";
 
 // Configuración de SMTP desde las variables de entorno
-const SMTP_HOST = functions.config().smtp.host;
-const SMTP_PORT = parseInt(functions.config().smtp.port, 10);
-const SMTP_USER = functions.config().smtp.user;
-const SMTP_PASS = functions.config().smtp.pass;
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || "465", 10);
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
 
 // Crear un transportador de nodemailer
 const transporter = nodemailer.createTransport({
@@ -30,14 +35,12 @@ interface WompiTransactionResponse {
   };
 }
 
-// Función existente para Wompi
-exports.createWompiTransaction = functions.https.onCall(
+// Función para crear transacciones con Wompi (2nd Gen)
+export const createWompiTransaction = onCall(
+  { region: "us-central1" },
   async (request): Promise<TransactionResponse> => {
     if (!request.data || typeof request.data !== "object") {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "Los datos de la solicitud son inválidos."
-      );
+      throw new Error("Los datos de la solicitud son inválidos.");
     }
 
     const { amountInCents, customerEmail, customerData } = request.data as TransactionData;
@@ -72,22 +75,16 @@ exports.createWompiTransaction = functions.https.onCall(
         reference: transactionData.reference,
       };
     } catch (error: unknown) {
-      functions.logger.error("Error al crear transacción con Wompi:", error);
+      logger.error("Error al crear transacción con Wompi:", error);
       if (axios.isAxiosError(error)) {
-        throw new functions.https.HttpsError(
-          "internal",
-          error.response?.data?.error || error.message
-        );
+        throw new Error(error.response?.data?.error || error.message);
       }
-      throw new functions.https.HttpsError(
-        "internal",
-        (error as Error).message || "Error desconocido"
-      );
+      throw new Error((error as Error).message || "Error desconocido");
     }
   }
 );
 
-// Nueva función para enviar correos de bienvenida
+// Nueva función para enviar correos de bienvenida (2nd Gen)
 interface SendWelcomeEmailData {
   email: string;
   fullName: string;
@@ -98,13 +95,11 @@ interface SendWelcomeEmailResponse {
   message?: string;
 }
 
-exports.sendWelcomeEmail = functions.https.onCall(
+export const sendWelcomeEmail = onCall(
+  { region: "us-central1" },
   async (request): Promise<SendWelcomeEmailResponse> => {
     if (!request.data || typeof request.data !== "object") {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "Los datos de la solicitud son inválidos."
-      );
+      throw new Error("Los datos de la solicitud son inválidos.");
     }
 
     const { email, fullName } = request.data as SendWelcomeEmailData;
@@ -124,17 +119,14 @@ exports.sendWelcomeEmail = functions.https.onCall(
 
     try {
       await transporter.sendMail(mailOptions);
-      functions.logger.info(`Correo enviado a ${email}`);
+      logger.info(`Correo enviado a ${email}`);
       return {
         success: true,
         message: "Correo de bienvenida enviado exitosamente.",
       };
     } catch (error: unknown) {
-      functions.logger.error("Error al enviar correo:", error);
-      throw new functions.https.HttpsError(
-        "internal",
-        (error as Error).message || "Error al enviar el correo de bienvenida."
-      );
+      logger.error("Error al enviar correo:", error);
+      throw new Error((error as Error).message || "Error al enviar el correo de bienvenida.");
     }
   }
 );

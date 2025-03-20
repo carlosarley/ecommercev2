@@ -1,42 +1,34 @@
 module.exports = {
-  root: true,
   env: {
     node: true,
+    es2021: true,
   },
   extends: [
     "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "google",
     "plugin:@typescript-eslint/recommended",
+    "google",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
+    ecmaVersion: 12,
     sourceType: "module",
   },
-  ignorePatterns: [
-    "dist/", 
-    "node_modules/",
-    "/lib/**/*", // Ignore built files.
-    "/generated/**/*", // Ignore generated files.
-  ],
   plugins: [
     "@typescript-eslint",
-    "import",
   ],
   rules: {
     "quotes": ["error", "double"],
-    "import/no-unresolved": 0,
+    "semi": ["error", "always"],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
     "indent": ["error", 2],
-  },
-  overrides: [
-    {
-      files: ["*.js", "*.ts"], // Especifica las extensiones aquí
-      rules: {
-        // Reglas específicas para estos archivos
+    "max-len": ["error", { "code": 120 }],
+    "@typescript-eslint/no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true, // Permitir expresiones de cortocircuito (&&, ||)
+        "allowTernary": true, // Permitir expresiones ternarias
       },
-    },
-  ],
+    ],
+  },
 };
