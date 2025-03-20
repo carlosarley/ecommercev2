@@ -1,60 +1,84 @@
-import { onCall } from "firebase-functions/v2/https"; // Eliminamos HttpsOptions
-import { logger } from "firebase-functions/v2";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import * as functions from "firebase-functions";
+import * as logger from "firebase-functions/logger";
 import axios from "axios";
-import * as nodemailer from "nodemailer";
-import * as admin from "firebase-admin";
-import { TransactionData, TransactionResponse } from "./types";
 
-// Inicializa Firebase Admin
-admin.initializeApp();
-
-const WOMPI_PRIVATE_KEY = process.env.WOMPI_PRIVATE_KEY;
 const WOMPI_SANDBOX_URL = "https://sandbox.wompi.co/v1/transactions";
+const WOMPI_PRIVATE_KEY = functions.config().wompi?.private_key;
 
-// Configuración de SMTP desde las variables de entorno
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || "465", 10);
-const SMTP_USER = process.env.SMTP_USER;
-const SMTP_PASS = process.env.SMTP_PASS;
-
-// Crear un transportador de nodemailer
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: SMTP_PORT,
-  secure: true, // Usa SSL/TLS para el puerto 465
-  auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS,
-  },
-});
+interface TransactionData {
+  amountInCents: number;
+  customerEmail: string;
+  customerData: {
+    full_name: string;
+    email: string;
+    phone_number: string;
+    legal_id: string;
+    legal_id_type: string;
+  };
+}
 
 interface WompiTransactionResponse {
   data: {
     id: string;
-    reference: string;
+    redirect_url: string;
   };
 }
 
-// Función para crear transacciones con Wompi (2nd Gen)
+interface TransactionResponse {
+  success: boolean;
+  transactionId: string;
+  reference: string;
+  redirectUrl: string;
+}
+
 export const createWompiTransaction = onCall(
   { region: "us-central1" },
   async (request): Promise<TransactionResponse> => {
+    // Validar que WOMPI_PRIVATE_KEY esté configurada
+    if (!WOMPI_PRIVATE_KEY) {
+      logger.error("WOMPI_PRIVATE_KEY no está configurada en las variables de entorno.");
+      throw new HttpsError("internal", "Configuración del servidor incompleta.");
+    }
+
+    // Validar los datos de entrada
     if (!request.data || typeof request.data !== "object") {
-      throw new Error("Los datos de la solicitud son inválidos.");
+      throw new HttpsError("invalid-argument", "Los datos de la solicitud son inválidos.");
     }
 
     const { amountInCents, customerEmail, customerData } = request.data as TransactionData;
+
+    if (!amountInCents || typeof amountInCents !== "number") {
+      throw new HttpsError("invalid-argument", "amountInCents es requerido y debe ser un número.");
+    }
+    if (!customerEmail || typeof customerEmail !== "string") {
+      throw new HttpsError("invalid-argument", "customerEmail es requerido y debe ser una cadena.");
+    }
+    if (!customerData || typeof customerData !== "object") {
+      throw new HttpsError("invalid-argument", "customerData es requerido y debe ser un objeto.");
+    }
+
+    // Asegurarse de que el phone_number tenga el código de país
+    const phoneNumberWithCountryCode = customerData.phone_number.startsWith("57")
+      ? customerData.phone_number
+      : `57${customerData.phone_number}`;
 
     const transactionData = {
       amount_in_cents: amountInCents,
       currency: "COP",
       customer_email: customerEmail,
       payment_method: {
-        type: "MULTIPLE",
+        type: "CARD", // Cambiado de "MULTIPLE" a "CARD"
         installments: 1,
       },
       reference: `REF_${Date.now()}`,
-      customer_data: customerData,
+      customer_data: {
+        full_name: customerData.full_name,
+        email: customerData.email,
+        phone_number: phoneNumberWithCountryCode,
+        legal_id: customerData.legal_id,
+        legal_id_type: customerData.legal_id_type,
+      },
     };
 
     try {
@@ -73,60 +97,21 @@ export const createWompiTransaction = onCall(
         success: true,
         transactionId: response.data.data.id,
         reference: transactionData.reference,
+        redirectUrl: response.data.data.redirect_url,
       };
     } catch (error: unknown) {
       logger.error("Error al crear transacción con Wompi:", error);
       if (axios.isAxiosError(error)) {
-        throw new Error(error.response?.data?.error || error.message);
+        const errorMessage = error.response?.data?.error?.message || error.message;
+        const statusCode = error.response?.status || "desconocido";
+        logger.error(`Detalles del error de Wompi: Status ${statusCode}, Mensaje: ${errorMessage}`);
+        throw new HttpsError(
+          "internal",
+          `Error al crear transacción con Wompi (Status ${statusCode}): ${errorMessage}`
+        );
       }
-      throw new Error((error as Error).message || "Error desconocido");
-    }
-  }
-);
-
-// Nueva función para enviar correos de bienvenida (2nd Gen)
-interface SendWelcomeEmailData {
-  email: string;
-  fullName: string;
-}
-
-interface SendWelcomeEmailResponse {
-  success: boolean;
-  message?: string;
-}
-
-export const sendWelcomeEmail = onCall(
-  { region: "us-central1" },
-  async (request): Promise<SendWelcomeEmailResponse> => {
-    if (!request.data || typeof request.data !== "object") {
-      throw new Error("Los datos de la solicitud son inválidos.");
-    }
-
-    const { email, fullName } = request.data as SendWelcomeEmailData;
-
-    const mailOptions = {
-      from: `"Ecommerce PC Parts" <${SMTP_USER}>`,
-      to: email,
-      subject: "¡Bienvenido a Ecommerce PC Parts!",
-      text: `Hola ${fullName},\n\nGracias por registrarte en Ecommerce PC Parts. ¡Esperamos que disfrutes de tu experiencia de compra!\n\nSaludos,\nEl equipo de Ecommerce PC Parts`,
-      html: `
-        <h1>¡Bienvenido, ${fullName}!</h1>
-        <p>Gracias por registrarte en <strong>Ecommerce PC Parts</strong>.</p>
-        <p>Esperamos que disfrutes de tu experiencia de compra con nosotros.</p>
-        <p>Saludos,<br>El equipo de Ecommerce PC Parts</p>
-      `,
-    };
-
-    try {
-      await transporter.sendMail(mailOptions);
-      logger.info(`Correo enviado a ${email}`);
-      return {
-        success: true,
-        message: "Correo de bienvenida enviado exitosamente.",
-      };
-    } catch (error: unknown) {
-      logger.error("Error al enviar correo:", error);
-      throw new Error((error as Error).message || "Error al enviar el correo de bienvenida.");
+      const genericError = error instanceof Error ? error.message : "Error desconocido";
+      throw new HttpsError("internal", `Error desconocido al crear transacción: ${genericError}`);
     }
   }
 );

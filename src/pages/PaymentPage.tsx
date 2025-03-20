@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // useNavigate reemplaza useHistory
+import React from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useCart } from "../context/CartContext";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { TransactionResponse } from "../types";
 
-const WOMPI_PUBLIC_KEY = import.meta.env.VITE_WOMPI_PUBLIC_KEY;
+interface TransactionResponse {
+  success: boolean;
+  transactionId: string;
+  reference: string;
+  redirectUrl: string;
+  error?: string;
+}
 
 const PaymentPage: React.FC = () => {
   const { cartItems } = useCart();
   const { state } = useLocation();
   const { total = 0 } = state || {};
-  const [transactionId, setTransactionId] = useState<string | null>(null);
-  const [transactionReference, setTransactionReference] = useState<string | null>(null);
-  const navigate = useNavigate(); // Reemplazo de useHistory
 
   const totalInCents = Math.round(total * 100);
 
@@ -36,18 +38,18 @@ const PaymentPage: React.FC = () => {
         customerData: {
           full_name: "Cliente Ejemplo",
           email: "cliente@example.com",
-          phone_number: "1234567890",
+          phone_number: "3001234567", // El backend lo convertirá a "573001234567"
           legal_id: "123456789",
           legal_id_type: "CC",
         },
       });
 
-      const { success, transactionId, reference, error } = result.data;
+      const { success, transactionId, reference, redirectUrl, error } = result.data;
 
-      if (success && transactionId && reference) {
-        setTransactionId(transactionId);
-        setTransactionReference(reference);
-        toast.success("Transacción creada. Redirigiendo al widget de pago...");
+      if (success && transactionId && reference && redirectUrl) {
+        toast.success("Transacción creada. Redirigiendo al checkout de Wompi...");
+        // Redirigir al usuario al checkout de Wompi
+        window.location.href = redirectUrl;
       } else {
         console.error("Error al crear transacción:", error);
         toast.error("Error al procesar el pago. Intenta de nuevo.");
@@ -57,53 +59,6 @@ const PaymentPage: React.FC = () => {
       toast.error("Error al procesar el pago. Intenta de nuevo.");
     }
   };
-
-  useEffect(() => {
-    if (transactionId && transactionReference) {
-      const script = document.createElement("script");
-      script.src = "https://checkout.wompi.co/widget.js";
-      script.async = true;
-      script.onload = () => {
-        if (window.WompiWidget) {
-          const widget = new window.WompiWidget({
-            render: "button",
-            publicKey: WOMPI_PUBLIC_KEY,
-            currency: "COP",
-            amountInCents: totalInCents,
-            reference: transactionReference,
-            onSuccess: (data: any) => {
-              console.log("Pago exitoso:", data);
-              toast.success("Pago aprobado. ¡Gracias por tu compra!");
-              navigate("/order-confirmation"); // Uso de navigate
-            },
-            onError: (error: any) => {
-              console.error("Error en el pago:", error);
-              toast.error("Error al procesar el pago.");
-            },
-            onClose: () => {
-              console.log("Widget cerrado");
-              setTransactionId(null);
-              setTransactionReference(null);
-            },
-          });
-
-          widget.open();
-        } else {
-          console.error("Wompi widget no cargado");
-          toast.error("Error al cargar el widget de pago.");
-        }
-      };
-      script.onerror = () => {
-        console.error("Error al cargar el script de Wompi");
-        toast.error("Error al cargar el widget de pago.");
-      };
-      document.body.appendChild(script);
-
-      return () => {
-        document.body.removeChild(script);
-      };
-    }
-  }, [transactionId, transactionReference, totalInCents, navigate]);
 
   return (
     <div className="container mx-auto p-6 min-h-screen">
