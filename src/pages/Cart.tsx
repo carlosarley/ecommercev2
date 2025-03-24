@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { formatPrice } from "../utils/formatPrice"; // Ajusta la ruta
+import { formatPrice } from "../utils/formatPrice";
 
 const Cart: React.FC = () => {
   const { cartItems, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -20,14 +20,16 @@ const Cart: React.FC = () => {
   return (
     <div className="p-6">
       <div className="container mx-auto">
-        <h1 className="text-3xl font-semibold mb-4" style={{ color: 'var(--text-color)' }}>Carrito de Compras</h1>
+        <h1 className="text-3xl font-semibold mb-4" style={{ color: "var(--text-color)" }}>
+          Carrito de Compras
+        </h1>
         {cartItems.length > 0 ? (
           <div>
             <div className="grid grid-cols-1 gap-6">
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center bg-white p-4 rounded-lg border border-gray-700"
+                  className="flex items-center bg-menu p-4 rounded-lg border border-gray-700"
                 >
                   <img
                     src={item.image || "/placeholder.jpg"}
@@ -35,9 +37,15 @@ const Cart: React.FC = () => {
                     className="w-20 h-20 object-cover rounded-md mr-4"
                   />
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium text-black" >{item.name}</h3>
-                    <p className="text-2xl text-button text-black">${formatPrice(item.price)} x {item.quantity}</p>
-                    <p className="text-md text-black" >Subtotal: ${formatPrice(item.price * item.quantity)} </p>
+                    <h3 className="text-lg font-medium" style={{ color: "var(--text-color)" }}>
+                      {item.name}
+                    </h3>
+                    <p className="text-2xl text-[#f90]" style={{ color: "var(--text-color)" }}>
+                      ${formatPrice(item.price)} x {item.quantity}
+                    </p>
+                    <p className="text-md" style={{ color: "var(--text-color)" }}>
+                      Subtotal: ${formatPrice(item.price * item.quantity)}
+                    </p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
@@ -45,7 +53,9 @@ const Cart: React.FC = () => {
                       >
                         −
                       </button>
-                      <span className="mx-3 text-black" >{item.quantity}</span>
+                      <span className="mx-3" style={{ color: "var(--text-color)" }}>
+                        {item.quantity}
+                      </span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
                         className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
@@ -64,7 +74,9 @@ const Cart: React.FC = () => {
               ))}
             </div>
             <div className="mt-6 text-right">
-              <p className="text-3xl font-semibold" style={{ color: 'var(--text-color)' }}>Total: ${formatPrice(totalPrice)} </p>
+              <p className="text-3xl font-semibold" style={{ color: "var(--text-color)" }}>
+                Total: ${formatPrice(totalPrice)}
+              </p>
               <button
                 onClick={clearCart}
                 className="mt-4 bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 mr-4"
@@ -80,7 +92,7 @@ const Cart: React.FC = () => {
             </div>
           </div>
         ) : (
-          <p style={{ color: 'var(--text-color)' }}>Tu carrito está vacío.</p>
+          <p style={{ color: "var(--text-color)" }}>Tu carrito está vacío.</p>
         )}
       </div>
     </div>
