@@ -19,6 +19,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const storedCart = localStorage.getItem("cart");
       console.log("Cargando carrito desde localStorage:", storedCart);
+      console.log("Dominio actual:", window.location.hostname);
+      console.log("Protocolo:", window.location.protocol);
       return storedCart ? JSON.parse(storedCart) : [];
     } catch (error) {
       console.error("Error al cargar el carrito desde localStorage:", error);
@@ -34,6 +36,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     try {
       console.log("Guardando carrito en localStorage:", cartItems);
+      console.log("Dominio actual:", window.location.hostname);
       localStorage.setItem("cart", JSON.stringify(cartItems));
     } catch (error) {
       console.error("Error al guardar el carrito en localStorage:", error);

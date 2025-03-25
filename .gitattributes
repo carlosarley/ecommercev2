@@ -1,0 +1,15 @@
+# Asegurar que los archivos de texto usen LF (estándar en Git)
+* text=auto eol=lf
+
+# Archivos específicos que deben usar LF (por ejemplo, scripts)
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.svg text eol=lf
+*.json text eol=lf
+
+# Archivos binarios (no deben ser tratados como texto)
+*.jpg binary
+*.png binary
+*.jpeg binary
