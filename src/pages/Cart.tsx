@@ -29,7 +29,7 @@ const Cart: React.FC = () => {
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center bg-menu p-4 rounded-lg border border-gray-700"
+                  className="flex items-center bg-white p-4 rounded-lg border border-gray-300"
                 >
                   <img
                     src={item.image || "/placeholder.jpg"}
@@ -37,28 +37,28 @@ const Cart: React.FC = () => {
                     className="w-20 h-20 object-cover rounded-md mr-4"
                   />
                   <div className="flex-1">
-                    <h3 className="text-lg font-medium" style={{ color: "var(--text-color)" }}>
+                    <h3 className="text-lg font-medium text-black">
                       {item.name}
                     </h3>
-                    <p className="text-2xl text-[#f90]" style={{ color: "var(--text-color)" }}>
+                    <p className="text-xl text-black">
                       ${formatPrice(item.price)} x {item.quantity}
                     </p>
-                    <p className="text-md" style={{ color: "var(--text-color)" }}>
+                    <p className="text-md text-black">
                       Subtotal: ${formatPrice(item.price * item.quantity)}
                     </p>
                     <div className="flex items-center mt-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
-                        className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
+                        className="bg-gray-300 text-black px-3 py-1 rounded-md hover:bg-gray-400"
                       >
                         −
                       </button>
-                      <span className="mx-3" style={{ color: "var(--text-color)" }}>
+                      <span className="mx-3 text-black">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
-                        className="bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600"
+                        className="bg-gray-300 text-black px-3 py-1 rounded-md hover:bg-gray-400"
                       >
                         +
                       </button>
@@ -66,7 +66,7 @@ const Cart: React.FC = () => {
                   </div>
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                    className="bg-[#f90] text-white px-4 py-2 rounded-md hover:bg-[#e68a00]"
                   >
                     Eliminar
                   </button>
@@ -74,8 +74,8 @@ const Cart: React.FC = () => {
               ))}
             </div>
             <div className="mt-6 text-right">
-              <p className="text-3xl font-semibold" style={{ color: "var(--text-color)" }}>
-                Total: ${formatPrice(totalPrice)}
+              <p className="text-2xl font-semibold text-black">
+                TOTAL: ${formatPrice(totalPrice)}
               </p>
               <button
                 onClick={clearCart}
