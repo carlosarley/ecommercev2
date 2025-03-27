@@ -11,7 +11,8 @@ interface CartContextType {
   decreaseQuantity: (productId: string) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+// Exportar CartContext explícitamente
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Función para cargar el carrito desde localStorage

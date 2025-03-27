@@ -19,6 +19,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaymentPage from "./pages/PaymentPage";
+import SuccessPage from "./pages/SuccessPage";
 import Wishlist from "./pages/Wishlist";
 
 const App: React.FC = () => {
@@ -31,6 +32,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/success" element={<SuccessPage />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/product/:id" element={<ProductDetail />} />

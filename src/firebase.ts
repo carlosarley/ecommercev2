@@ -4,6 +4,7 @@ import { getFirestore } from 'firebase/firestore'; // Para la base de datos (pro
 import { getAuth } from 'firebase/auth'; // Para autenticación (login, registro)
 import { getStorage } from 'firebase/storage'; // Para subir imágenes (fotos de productos)
 import { getAnalytics } from 'firebase/analytics'; // Opcional: para análisis
+import { getFunctions, httpsCallable } from 'firebase/functions'; // Para Cloud Functions
 
 // Configuración de tu app de Firebase (esto lo copiaste de Firebase Console)
 const firebaseConfig = {
@@ -17,10 +18,12 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-export const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig); // Exportar app explícitamente
 
 // Exporta los servicios que usarás en tu app
 export const db = getFirestore(app); // Base de datos Firestore
 export const auth = getAuth(app); // Autenticación
 export const storage = getStorage(app); // Storage para imágenes
 export const analytics = getAnalytics(app); // Analytics (opcional)
+export const functions = getFunctions(app, 'us-central1'); // Cloud Functions (especifica la región)
+export { httpsCallable }; // Exporta httpsCallable para usar en las páginas

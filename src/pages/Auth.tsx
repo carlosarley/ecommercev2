@@ -19,10 +19,39 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { signIn, auth } = useAuth();
+  const { signIn, auth, currentUser, signOut } = useAuth(); // Agregar currentUser y signOut
   const navigate = useNavigate();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [loading, setLoading] = useState(false);
+
+  // Si el usuario ya está autenticado, mostrar un mensaje y un botón para cerrar sesión
+  if (currentUser) {
+    return (
+      <div className="bg-body text-white p-6">
+        <div className="container mx-auto max-w-md">
+          <h1 className="text-3xl font-semibold mb-4" style={{ color: "var(--text-color)" }}>
+            Ya estás autenticado
+          </h1>
+          <p className="mb-4">Hola, {currentUser.email}!</p>
+          <button
+            onClick={async () => {
+              await signOut();
+              toast.success("Sesión cerrada exitosamente");
+              navigate("/");
+            }}
+            className="w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+          >
+            Cerrar Sesión
+          </button>
+          <p className="mt-4 text-center">
+            <Link to="/" className="text-[#f90] hover:underline">
+              Volver al inicio
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,6 +196,11 @@ const LoginForm: React.FC = () => {
 };
 
 const Auth: React.FC = () => {
+  if (!RECAPTCHA_SITE_KEY) {
+    console.error("RECAPTCHA_SITE_KEY no está definida en las variables de entorno.");
+    return <div>Error: No se pudo cargar reCAPTCHA. Por favor, revisa la configuración.</div>;
+  }
+
   return (
     <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_SITE_KEY}>
       <LoginForm />

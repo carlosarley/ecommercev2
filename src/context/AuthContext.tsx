@@ -1,23 +1,24 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { auth } from "../firebase";
 import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   User,
+  Auth,
 } from "firebase/auth";
 
 interface AuthContextType {
-  currentUser: User | null; // Cambiar 'user' a 'currentUser' para que coincida con los componentes
+  currentUser: User | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signOutUser: () => Promise<void>; // Cambiar 'signOut' a 'signOutUser' para que coincida con los componentes
-  auth: typeof auth;
+  signOut: () => Promise<void>; // Renombrar signOutUser a signOut
+  auth: Auth; // Usar el tipo Auth de Firebase
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null); // Cambiar 'user' a 'currentUser'
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,8 +39,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, signIn, signOutUser, auth }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ currentUser, signIn, signOut: signOutUser, auth }}>
+      {loading ? <div>Cargando...</div> : children}
     </AuthContext.Provider>
   );
 };
