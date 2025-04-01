@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import SHA256 from 'crypto-js/sha256';
 
 // Definir el tipo de los datos del cliente
 interface CustomerData {
@@ -9,11 +10,14 @@ interface CustomerData {
   phoneNumber: string;
   legalId: string;
   legalIdType: string;
+  addressLine1: string;
+  city: string;
+  region: string;
+  country: string;
 }
 
 const PaymentPage: React.FC = () => {
   const { cartItems } = useCart();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Estado para los datos del cliente
@@ -23,15 +27,34 @@ const PaymentPage: React.FC = () => {
     phoneNumber: '',
     legalId: '',
     legalIdType: 'CC',
+    addressLine1: '',
+    city: '',
+    region: '',
+    country: 'CO', // Por defecto Colombia
   });
 
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<string>('CARD');
 
   // Calcular el total del carrito con IVA
   const subtotal = cartItems.reduce((sum: number, item) => sum + item.price * item.quantity, 0);
   const iva = subtotal * 0.19; // 19% IVA en Colombia
   const totalWithIva = subtotal + iva;
+  const amountInCents = Math.round(totalWithIva * 100); // Wompi usa centavos
+
+  // Configuración de Wompi
+  const WOMPI_PUBLIC_KEY = 'pub_prod_YvzwsKQJJGHLKvhbPXcc8GrHDVzf2Dfw'; // Llave pública de Wompi
+  const WOMPI_INTEGRITY_SECRET = 'prod_integrity_WYldkU1ZmlmMb1eAdcE7JYkqratHPswh'; // Clave secreta de integridad de Wompi
+  const currency = 'COP';
+  const redirectUrl = 'https://pchub.net/success'; // URL a la que Wompi redirigirá después del pago
+
+  // Generar una referencia única para el pago
+  const reference = `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+  // Generar la firma de integridad (signature:integrity) usando la clave secreta de integridad
+  const signatureIntegrity = useMemo(() => {
+    const stringToHash = `${reference}${amountInCents}${currency}${WOMPI_INTEGRITY_SECRET}`;
+    return SHA256(stringToHash).toString();
+  }, [reference, amountInCents, currency]);
 
   // Manejar cambios en el formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -39,71 +62,33 @@ const PaymentPage: React.FC = () => {
     setCustomerData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Función para manejar el pago
-  const handlePayment = async (e: React.FormEvent) => {
+  // Función para manejar el envío del formulario
+  const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
+    // Validar términos y condiciones
     if (!termsAccepted) {
       setError('Debes aceptar los términos y condiciones para continuar.');
-      setLoading(false);
       return;
     }
 
-    try {
-      // Validar datos del cliente
-      if (!customerData.fullName || !customerData.email || !customerData.phoneNumber || !customerData.legalId) {
-        throw new Error('Por favor, completa todos los campos requeridos.');
-      }
-
-      // Preparar los datos para enviar a la Cloud Function
-      const transactionData = {
-        amountInCents: Math.round(totalWithIva * 100), // Wompi usa centavos
-        customerEmail: customerData.email,
-        paymentMethod: paymentMethod,
-        customerData: {
-          full_name: customerData.fullName,
-          email: customerData.email,
-          phone_number: customerData.phoneNumber,
-          legal_id: customerData.legalId,
-          legal_id_type: customerData.legalIdType,
-        },
-      };
-
-      // Hacer la solicitud a la Cloud Function
-      const response = await fetch('https://us-central1-ecommerce-pc-parts.cloudfunctions.net/createWompiTransaction', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data: transactionData }),
-        // No usamos credentials: "include" porque no necesitamos enviar credenciales
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error al crear la transacción con Wompi: ${errorText}`);
-      }
-
-      const result = await response.json();
-      const { success, transactionId, redirectUrl } = result.data;
-
-      if (!success) {
-        throw new Error('Error al crear la transacción con Wompi');
-      }
-
-      // Guardar el transactionId para verificarlo después
-      localStorage.setItem('transactionId', transactionId);
-
-      // Redirigir al usuario al redirectUrl de Wompi para completar el pago
-      window.location.href = redirectUrl;
-    } catch (err: any) {
-      setError(err.message || 'Error al procesar el pago');
-      console.error(err);
-    } finally {
-      setLoading(false);
+    // Validar datos del cliente
+    if (
+      !customerData.fullName ||
+      !customerData.email ||
+      !customerData.phoneNumber ||
+      !customerData.legalId ||
+      !customerData.addressLine1 ||
+      !customerData.city ||
+      !customerData.region
+    ) {
+      setError('Por favor, completa todos los campos requeridos.');
+      return;
     }
+
+    // Si las validaciones pasan, el formulario se enviará automáticamente a Wompi
+    e.currentTarget.submit();
   };
 
   return (
@@ -119,7 +104,9 @@ const PaymentPage: React.FC = () => {
           <ul className="border p-4 rounded">
             {cartItems.map((item) => (
               <li key={item.id} className="flex justify-between py-2">
-                <span>{item.name} (x{item.quantity})</span>
+                <span>
+                  {item.name} (x{item.quantity})
+                </span>
                 <span>${(item.price * item.quantity).toLocaleString('es-CO')}</span>
               </li>
             ))}
@@ -139,10 +126,38 @@ const PaymentPage: React.FC = () => {
         )}
       </div>
 
-      {/* Formulario para datos del cliente */}
+      {/* Formulario para datos del cliente y envío a Wompi */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Datos del cliente</h2>
-        <form onSubmit={handlePayment}>
+        <form action="https://checkout.wompi.co/p/" method="GET" onSubmit={handlePayment}>
+          {/* Campos ocultos requeridos por Wompi */}
+          <input type="hidden" name="public-key" value={WOMPI_PUBLIC_KEY} />
+          <input type="hidden" name="currency" value={currency} />
+          <input type="hidden" name="amount-in-cents" value={amountInCents.toString()} />
+          <input type="hidden" name="reference" value={reference} />
+          <input type="hidden" name="signature:integrity" value={signatureIntegrity} />
+
+          {/* Campos ocultos opcionales */}
+          <input type="hidden" name="redirect-url" value={redirectUrl} />
+          <input
+            type="hidden"
+            name="expiration-time"
+            value={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()} // Expira en 24 horas
+          />
+          <input type="hidden" name="tax-in-cents:vat" value={Math.round(iva * 100).toString()} />
+          <input type="hidden" name="tax-in-cents:consumption" value="0" /> {/* Impoconsumo, si aplica */}
+          <input type="hidden" name="customer-data:email" value={customerData.email} />
+          <input type="hidden" name="customer-data:full-name" value={customerData.fullName} />
+          <input type="hidden" name="customer-data:phone-number" value={customerData.phoneNumber} />
+          <input type="hidden" name="customer-data:legal-id" value={customerData.legalId} />
+          <input type="hidden" name="customer-data:legal-id-type" value={customerData.legalIdType} />
+          <input type="hidden" name="shipping-address:address-line-1" value={customerData.addressLine1} />
+          <input type="hidden" name="shipping-address:country" value={customerData.country} />
+          <input type="hidden" name="shipping-address:phone-number" value={customerData.phoneNumber} />
+          <input type="hidden" name="shipping-address:city" value={customerData.city} />
+          <input type="hidden" name="shipping-address:region" value={customerData.region} />
+
+          {/* Campos visibles para el cliente */}
           <div className="mb-4">
             <label className="block mb-1">Nombre completo</label>
             <input
@@ -203,17 +218,48 @@ const PaymentPage: React.FC = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="block mb-1">Método de pago</label>
+            <label className="block mb-1">Dirección de envío</label>
+            <input
+              type="text"
+              name="addressLine1"
+              value={customerData.addressLine1}
+              onChange={handleInputChange}
+              className="border p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Ciudad</label>
+            <input
+              type="text"
+              name="city"
+              value={customerData.city}
+              onChange={handleInputChange}
+              className="border p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">Región/Departamento</label>
+            <input
+              type="text"
+              name="region"
+              value={customerData.region}
+              onChange={handleInputChange}
+              className="border p-2 w-full rounded"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1">País</label>
             <select
-              name="paymentMethod"
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
+              name="country"
+              value={customerData.country}
+              onChange={handleInputChange}
               className="border p-2 w-full rounded"
             >
-              <option value="CARD">Tarjeta de crédito/débito</option>
-              <option value="PSE">PSE</option>
-              <option value="NEQUI">Nequi</option>
-              <option value="BANCOLOMBIA">Bancolombia</option>
+              <option value="CO">Colombia</option>
+              {/* Agrega más países si es necesario */}
             </select>
           </div>
           <div className="mb-4">
@@ -226,7 +272,12 @@ const PaymentPage: React.FC = () => {
               />
               <span className="ml-2">
                 Acepto los{' '}
-                <a href="https://wompi.co/terminos" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                <a
+                  href="https://wompi.co/terminos"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
                   términos y condiciones
                 </a>
               </span>
@@ -238,12 +289,12 @@ const PaymentPage: React.FC = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
               type="submit"
-              disabled={loading || cartItems.length === 0}
+              disabled={cartItems.length === 0}
               className={`bg-blue-500 text-white px-6 py-2 rounded ${
-                loading || cartItems.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+                cartItems.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
               }`}
             >
-              {loading ? 'Procesando...' : 'Pagar ahora'}
+              Pagar con Wompi
             </button>
             <Link to="/cart" className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
               Volver al carrito
