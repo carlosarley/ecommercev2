@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; // Usar el hook useCart
-import { functions, httpsCallable } from '../firebase';
+import { useCart } from '../context/CartContext';
 
 // Definir el tipo de los datos del cliente
 interface CustomerData {
@@ -12,16 +11,8 @@ interface CustomerData {
   legalIdType: string;
 }
 
-// Definir el tipo de la respuesta de la Cloud Function
-interface TransactionResponse {
-  success: boolean;
-  transactionId: string;
-  reference: string;
-  redirectUrl: string;
-}
-
 const PaymentPage: React.FC = () => {
-  const { cartItems, clearCart } = useCart(); // Usar useCart para obtener el contexto tipado
+  const { cartItems } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,13 +71,22 @@ const PaymentPage: React.FC = () => {
         },
       };
 
-      // Llamar a la Cloud Function usando la SDK de Firebase
-      const createWompiTransaction = httpsCallable<unknown, TransactionResponse>(
-        functions,
-        'createWompiTransaction'
-      );
-      const result = await createWompiTransaction(transactionData);
+      // Hacer la solicitud a la Cloud Function
+      const response = await fetch('https://us-central1-ecommerce-pc-parts.cloudfunctions.net/createWompiTransaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: transactionData }),
+        // No usamos credentials: "include" porque no necesitamos enviar credenciales
+      });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error al crear la transacción con Wompi: ${errorText}`);
+      }
+
+      const result = await response.json();
       const { success, transactionId, redirectUrl } = result.data;
 
       if (!success) {

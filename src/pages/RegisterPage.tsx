@@ -1,24 +1,11 @@
 import { useState } from "react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { useNavigate } from "react-router-dom";
-import { app } from "../firebase";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useAuth } from "../context/AuthContext";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-
-interface RegisterFormData {
-  email: string;
-  password: string;
-  recaptchaToken: string;
-}
-
-interface SendWelcomeEmailData {
-  email: string;
-  fullName: string;
-}
 
 const RegisterForm: React.FC = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -44,42 +31,64 @@ const RegisterForm: React.FC = () => {
       }
       console.log("reCAPTCHA Token:", recaptchaToken);
 
-      const functions = getFunctions(app, "us-central1");
-      const registerUser = httpsCallable<RegisterFormData, { success: boolean; message?: string }>(
-        functions,
-        "registerUserWithRecaptcha"
+      // Hacer la solicitud a registerUserWithRecaptcha usando fetch
+      const registerResponse = await fetch(
+        "https://us-central1-ecommerce-pc-parts.cloudfunctions.net/registerUserWithRecaptcha",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: { email, password, recaptchaToken },
+          }),
+        }
       );
 
-      const result = await registerUser({
-        email,
-        password,
-        recaptchaToken,
-      });
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json();
+        throw new Error(errorData.error || "Error al registrarse");
+      }
 
-      if (result.data.success) {
+      const registerResult = await registerResponse.json();
+      const { success, message } = registerResult.data;
+
+      if (success) {
         toast.success("Registro exitoso. ¡Bienvenido!");
 
-        const sendWelcomeEmail = httpsCallable<SendWelcomeEmailData, { success: boolean; message?: string }>(
-          functions,
-          "sendWelcomeEmail"
+        // Hacer la solicitud a sendWelcomeEmail usando fetch
+        const emailResponse = await fetch(
+          "https://us-central1-ecommerce-pc-parts.cloudfunctions.net/sendWelcomeEmail",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: { email, fullName },
+            }),
+          }
         );
 
-        const emailResult = await sendWelcomeEmail({
-          email,
-          fullName,
-        });
-
-        if (emailResult.data.success) {
-          console.log("Correo de bienvenida enviado:", emailResult.data.message);
-          toast.info("Se ha enviado un correo de bienvenida.");
-        } else {
-          console.error("Error al enviar correo:", emailResult.data.message);
+        if (!emailResponse.ok) {
+          const emailErrorData = await emailResponse.json();
+          console.error("Error al enviar correo:", emailErrorData.error);
           toast.error("Registro exitoso, pero falló el envío del correo.");
+        } else {
+          const emailResult = await emailResponse.json();
+          const { success: emailSuccess, message: emailMessage } = emailResult.data;
+          if (emailSuccess) {
+            console.log("Correo de bienvenida enviado:", emailMessage);
+            toast.info("Se ha enviado un correo de bienvenida.");
+          } else {
+            console.error("Error al enviar correo:", emailMessage);
+            toast.error("Registro exitoso, pero falló el envío del correo.");
+          }
         }
 
         navigate("/auth");
       } else {
-        throw new Error(result.data.message || "Error al registrarse");
+        throw new Error(message || "Error al registrarse");
       }
     } catch (err: any) {
       const errorMessage = err.message || "Error al registrarse";
@@ -103,23 +112,34 @@ const RegisterForm: React.FC = () => {
       const user = result.user;
 
       if (user) {
-        const functions = getFunctions(app, "us-central1");
-        const sendWelcomeEmail = httpsCallable<SendWelcomeEmailData, { success: boolean; message?: string }>(
-          functions,
-          "sendWelcomeEmail"
+        // Hacer la solicitud a sendWelcomeEmail usando fetch
+        const emailResponse = await fetch(
+          "https://us-central1-ecommerce-pc-parts.cloudfunctions.net/sendWelcomeEmail",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: { email: user.email || "", fullName: user.displayName || "Usuario" },
+            }),
+          }
         );
 
-        const emailResult = await sendWelcomeEmail({
-          email: user.email || "",
-          fullName: user.displayName || "Usuario",
-        });
-
-        if (emailResult.data.success) {
-          console.log("Correo de bienvenida enviado:", emailResult.data.message);
-          toast.info("Se ha enviado un correo de bienvenida.");
-        } else {
-          console.error("Error al enviar correo:", emailResult.data.message);
+        if (!emailResponse.ok) {
+          const emailErrorData = await emailResponse.json();
+          console.error("Error al enviar correo:", emailErrorData.error);
           toast.error("Registro exitoso, pero falló el envío del correo.");
+        } else {
+          const emailResult = await emailResponse.json();
+          const { success: emailSuccess, message: emailMessage } = emailResult.data;
+          if (emailSuccess) {
+            console.log("Correo de bienvenida enviado:", emailMessage);
+            toast.info("Se ha enviado un correo de bienvenida.");
+          } else {
+            console.error("Error al enviar correo:", emailMessage);
+            toast.error("Registro exitoso, pero falló el envío del correo.");
+          }
         }
 
         toast.success("Registro con Google exitoso");

@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const { cartItems } = useCart();
-  const { currentUser, signOutUser } = useAuth();
+  const { currentUser, signOut } = useAuth(); // Cambiar signOutUser a signOut
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOutUser();
+      await signOut(); // Usar signOut en lugar de signOutUser
       toast.success("Sesión cerrada exitosamente");
       navigate("/");
       setIsMenuOpen(false);
