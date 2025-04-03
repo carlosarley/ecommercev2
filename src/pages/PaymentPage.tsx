@@ -17,7 +17,6 @@ interface CustomerData {
 
 const PaymentPage: React.FC = () => {
   const { cartItems } = useCart();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [customerData, setCustomerData] = useState<CustomerData>({
@@ -34,16 +33,19 @@ const PaymentPage: React.FC = () => {
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  // Calcular el subtotal con descuentos aplicados
   const subtotal = cartItems.reduce((sum: number, item) => {
     const itemPrice = item.price;
-    const discountPercentage = item.discount || 0;
+    const discountPercentage = item.discount || 0; // Si no hay descuento, usa 0
     const discountedPrice = itemPrice * (1 - discountPercentage / 100);
     return sum + discountedPrice * item.quantity;
   }, 0);
 
+  // Total sin IVA
   const total = subtotal;
-  const amountInCents = Math.round(total * 100);
+  const amountInCents = Math.round(total * 100); // Wompi usa centavos
 
+  // Configuración de Wompi
   const WOMPI_PUBLIC_KEY = 'pub_prod_YvzwsKQJJGHLKvhbPXcc8GrHDVzf2Dfw';
   const WOMPI_INTEGRITY_SECRET = 'prod_integrity_WYldkU1ZmlmMb1eAdcE7JYkqratHPswh';
   const currency = 'COP';
@@ -53,10 +55,7 @@ const PaymentPage: React.FC = () => {
 
   const signatureIntegrity = useMemo(() => {
     const stringToHash = `${reference}${amountInCents}${currency}${WOMPI_INTEGRITY_SECRET}`;
-    console.log('Datos para la firma:', { reference, amountInCents, currency });
-    const signature = SHA256(stringToHash).toString();
-    console.log('Firma generada:', signature);
-    return signature;
+    return SHA256(stringToHash).toString();
   }, [reference, amountInCents, currency]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -64,14 +63,12 @@ const PaymentPage: React.FC = () => {
     setCustomerData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePayment = async (e: React.FormEvent) => {
+  const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     if (!termsAccepted) {
       setError('Debes aceptar los términos y condiciones para continuar.');
-      setLoading(false);
       return;
     }
 
@@ -85,18 +82,10 @@ const PaymentPage: React.FC = () => {
       !customerData.region
     ) {
       setError('Por favor, completa todos los campos requeridos.');
-      setLoading(false);
       return;
     }
 
-    try {
-      console.log('Enviando formulario a Wompi...');
-      // El formulario se enviará automáticamente
-    } catch (err) {
-      setError('Ocurrió un error al procesar el pago. Por favor, intenta de nuevo.');
-      setLoading(false);
-      console.error('Error en el proceso de pago:', err);
-    }
+    e.currentTarget.submit();
   };
 
   return (
@@ -295,12 +284,12 @@ const PaymentPage: React.FC = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <button
               type="submit"
-              disabled={loading || cartItems.length === 0}
+              disabled={cartItems.length === 0}
               className={`bg-blue-500 text-white px-6 py-2 rounded ${
-                loading || cartItems.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+                cartItems.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
               }`}
             >
-              {loading ? 'Procesando...' : 'Pagar con Wompi'}
+              Pagar con Wompi
             </button>
             <Link to="/cart" className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">
               Volver al carrito
