@@ -10,6 +10,17 @@ export interface Product {
     stock?: number;
     coupon?: string;
   }
+  export interface BlogPost {
+    id: string;
+    title: string;
+    slug: string; // URL amigable (por ejemplo, "armar-pc-gamer-colombia-2025")
+    content: string; // Contenido del artículo en HTML o Markdown
+    excerpt: string; // Resumen breve para la página de listado
+    date: string; // Fecha de publicación (por ejemplo, "2025-04-01")
+    author: string; // Nombre del autor
+    image: string; // URL de la imagen principal
+    keywords: string[]; // Palabras clave para SEO
+  }
   
   export interface CartItem extends Product {
     quantity: number;

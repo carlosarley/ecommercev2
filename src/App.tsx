@@ -21,6 +21,10 @@ import "react-toastify/dist/ReactToastify.css";
 import PaymentPage from "./pages/PaymentPage";
 import SuccessPage from "./pages/SuccessPage";
 import Wishlist from "./pages/Wishlist";
+import BlogIndex from "./blogs/BlogIndex"; // Usamos el índice estático
+import Blog1 from "./blogs/Blog1";
+import Blog2 from "./blogs/Blog2";
+import Blog3 from "./blogs/Blog3";
 
 const App: React.FC = () => {
   return (
@@ -45,6 +49,11 @@ const App: React.FC = () => {
               <Route index element={<Auth />} />
               <Route path="register" element={<RegisterPage />} />
             </Route>
+            {/* Rutas para el blog */}
+            <Route path="/blog" element={<BlogIndex />} />
+            <Route path="/blog/armar-pc-gamer-colombia-2025" element={<Blog1 />} />
+            <Route path="/blog/mejores-tarjetas-graficas-2025-colombia" element={<Blog2 />} />
+            <Route path="/blog/mejorar-rendimiento-pc-gamer-2025" element={<Blog3 />} />
           </Routes>
           <Footer />
           <ToastContainer

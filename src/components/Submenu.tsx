@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 // Interface y estados relacionados con location (comentados para posible uso futuro)
-// interface Address {
-//   country: string;
-//   city: string;
-// }
+//interface Address {
+  //country: string;
+  //city: string;
+//}
 
 const Submenu: React.FC = () => {
   // Estados relacionados con location (comentados para posible uso futuro)
@@ -185,6 +185,13 @@ const Submenu: React.FC = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Categorías
+            </Link>
+            <Link
+              to="/blog"
+              className="hover:text-button transition-colors block md:inline-block text-sm md:text-base"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
             </Link>
           </div>
         </div>
