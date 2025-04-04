@@ -66,7 +66,7 @@ const App: React.FC = () => {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="dark"
+            theme="light" // Cambiar a "light"
           />
         </Router>
       </CartProvider>

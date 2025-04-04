@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { collection, query, orderBy, startAt, endAt, limit, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, limit } from "firebase/firestore";
 import { db } from "../firebase";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const { cartItems } = useCart();
-  const { currentUser, signOut } = useAuth(); // Cambiar signOutUser a signOut
+  const { currentUser, signOut } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -20,18 +20,18 @@ const Header: React.FC = () => {
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   useEffect(() => {
-    if (searchTerm.length === 0) {
+    if (searchTerm.length < 2) { // Evitar búsquedas con términos muy cortos
       setSearchResults([]);
       return;
     }
 
     const term = searchTerm.toLowerCase().trim();
     console.log("Buscando término:", term);
+
+    // Usar array-contains para buscar en el campo searchKeywords
     const q = query(
       collection(db, "products"),
-      orderBy("nameLowercase"),
-      startAt(term),
-      endAt(term + "\uf8ff"),
+      where("searchKeywords", "array-contains", term),
       limit(5)
     );
 
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOut(); // Usar signOut en lugar de signOutUser
+      await signOut();
       toast.success("Sesión cerrada exitosamente");
       navigate("/");
       setIsMenuOpen(false);
